@@ -1,81 +1,81 @@
-const fetch = require("node-fetch");
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 const ytSearch = require("yt-search");
 const https = require("https");
 
+function deleteAfterTimeout(filePath, timeout = 5000) {
+  setTimeout(() => {
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, (err) => {
+        if (!err) {
+          console.log(`✅ Deleted file: ${filePath}`);
+        } else {
+          console.error(`❌ Error deleting file: ${filePath}`);
+        }
+      });
+    }
+  }, timeout);
+}
+
 module.exports = {
   config: {
     name: "music",
-    version: "1.0.3",
+    version: "1.0.4",
     hasPermssion: 0,
-    credits: "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭",
-    description: "Download YouTube song from keyword search and link",
+    credits: "Mirrykal",
+    description: "Download YouTube song from keyword search",
     commandCategory: "Media",
-    usages: "[songName] [type]",
+    usages: "[songName]",
     cooldowns: 5,
-    dependencies: {
-      "node-fetch": "",
-      "yt-search": "",
-    },
   },
 
   run: async function ({ api, event, args }) {
-    let songName, type;
-
-    if (
-      args.length > 1 &&
-      (args[args.length - 1] === "audio" || args[args.length - 1] === "video")
-    ) {
-      type = args.pop();
-      songName = args.join(" ");
-    } else {
-      songName = args.join(" ");
-      type = "audio";
+    if (args.length === 0) {
+      return api.sendMessage("⚠️ Please provide a song name to search.", event.threadID);
     }
 
+    const songName = args.join(" ");
     const processingMessage = await api.sendMessage(
-      "✅ Apki request Jari Please wait...",
+      `🔍 Apki Request Jari Hai Please Wait..."${songName}"...`,
       event.threadID,
       null,
       event.messageID
     );
 
     try {
-      // Search for the song on YouTube
+      // 🔎 **YouTube पर Search**
       const searchResults = await ytSearch(songName);
       if (!searchResults || !searchResults.videos.length) {
         throw new Error("No results found for your search query.");
       }
 
-      // Get the top result from the search
+      // 🎵 **टॉप Result का URL**
       const topResult = searchResults.videos[0];
       const videoUrl = `https://www.youtube.com/watch?v=${topResult.videoId}`;
 
-      // Construct API URL for downloading the video or audio
-      const apiUrl = `https://apis.davidcyriltech.my.id/youtube/${type === "audio" ? "mp3" : "mp4"}?url=${encodeURIComponent(videoUrl)}`;
-
-      api.setMessageReaction("⌛", event.messageID, () => {}, true);
-
-      // Get the direct download URL from the API
+      // 🖥 **API Call to Your YouTube Downloader**
+      const apiUrl = `https://arun-music.onrender.com/download?url=${encodeURIComponent(videoUrl)}`;
       const downloadResponse = await axios.get(apiUrl);
-      const downloadUrl = downloadResponse.data.result.downloadUrl; // Assuming the API response contains the 'url' field for download
 
-      // Set the filename based on the song title and type
-      const safeTitle = topResult.title.replace(/[^a-zA-Z0-9 \-_]/g, ""); // Clean the title
-      const filename = `${safeTitle}.${type === "audio" ? "mp3" : "mp4"}`;
+      if (!downloadResponse.data.file_url) {
+        throw new Error("Download failed. API did not return a file URL.");
+      }
+
+      const downloadUrl = downloadResponse.data.file_url.replace("http:", "https:"); // 🛠 Fix http → https
+
+      // 📂 **Set Download Path**
       const downloadDir = path.join(__dirname, "cache");
-      const downloadPath = path.join(downloadDir, filename);
-
-      // Ensure the directory exists
       if (!fs.existsSync(downloadDir)) {
         fs.mkdirSync(downloadDir, { recursive: true });
       }
 
-      // Download the file and save locally
-      const file = fs.createWriteStream(downloadPath);
+      const safeTitle = topResult.title.replace(/[^a-zA-Z0-9]/g, "_");
+      const filename = `${safeTitle}.mp3`;
+      const downloadPath = path.join(downloadDir, filename);
 
+      // ⬇️ **Download File**
+      const file = fs.createWriteStream(downloadPath);
       await new Promise((resolve, reject) => {
         https.get(downloadUrl, (response) => {
           if (response.statusCode === 200) {
@@ -84,9 +84,7 @@ module.exports = {
               file.close(resolve);
             });
           } else {
-            reject(
-              new Error(`Failed to download file. Status code: ${response.statusCode}`)
-            );
+            reject(new Error(`Failed to download file. Status code: ${response.statusCode}`));
           }
         }).on("error", (error) => {
           fs.unlinkSync(downloadPath);
@@ -96,29 +94,22 @@ module.exports = {
 
       api.setMessageReaction("✅", event.messageID, () => {}, true);
 
-      // Send the downloaded file to the user
+      // 🎧 **Send the MP3 File**
       await api.sendMessage(
         {
           attachment: fs.createReadStream(downloadPath),
-          body: `🖤 Title: ${topResult.title}\n\n  »»𝑶𝑾𝑵𝑬𝑹««★™  »»𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵««
-          🥀𝒀𝑬 𝑳𝑶 𝑩𝑨𝑩𝒀 𝑨𝑷𝑲𝑰💞  ${
-            type === "audio" ? "audio" : "video"
-          } 🎧:`,
+          body: `🎶 Title: ${topResult.title}\n  »»𝑶𝑾𝑵𝑬𝑹««★™  »»𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵««
+          🥀𝒀𝑬 𝑳𝑶 𝑩𝑨𝑩𝒀 𝑨𝑷𝑲𝑰💞:`,
         },
         event.threadID,
-        () => {
-          fs.unlinkSync(downloadPath); // Cleanup after sending
-          api.unsendMessage(processingMessage.messageID);
-        },
         event.messageID
       );
+
+      // 🗑 **Auto Delete File After 5 Seconds**
+      deleteAfterTimeout(downloadPath, 5000);
     } catch (error) {
-      console.error(`Failed to download and send song: ${error.message}`);
-      api.sendMessage(
-        `Failed to download song: ${error.message}`,
-        event.threadID,
-        event.messageID
-      );
+      console.error(`❌ Error: ${error.message}`);
+      api.sendMessage(`❌ Failed: ${error.message}`, event.threadID, event.messageID);
     }
   },
 };

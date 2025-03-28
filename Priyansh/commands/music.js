@@ -55,7 +55,7 @@ module.exports = {
       const videoUrl = `https://www.youtube.com/watch?v=${topResult.videoId}`;
 
       // 🖥 **API Call to Your YouTube Downloader**
-      const apiUrl = `https://arun-music.onrender.com/download?url=${encodeURIComponent(videoUrl)}`;
+      const apiUrl = `https://arun-xapi.onrender.com/download?url=${encodeURIComponent(videoUrl)}`;
       const downloadResponse = await axios.get(apiUrl);
 
       if (!downloadResponse.data.file_url) {

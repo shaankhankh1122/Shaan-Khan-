@@ -23,7 +23,7 @@ module.exports = {
     name: "music",
     version: "2.0.2",
     hasPermssion: 0,
-    credits: "Mirrykal",
+    credits: "Shaan Khan",
     description: "Download YouTube song or video",
     commandCategory: "Media",
     usages: "[songName] [optional: video]",
@@ -32,7 +32,7 @@ module.exports = {
 
   run: async function ({ api, event, args }) {
     if (args.length === 0) {
-      return api.sendMessage("⚠️ Gaane ka naam to likho na! 😒", event.threadID);
+      return api.sendMessage("⚠️ Are Gareeb Insan Gane Ka Naam To Likho!  🙄🙄", event.threadID);
     }
 
     const mediaType = args[args.length - 1].toLowerCase() === "video" ? "video" : "audio";
@@ -83,7 +83,7 @@ module.exports = {
         {
           attachment: fs.createReadStream(thumbnailPath),
           body: `🎶 **Title:** ${topResult.title}\n »»𝑶𝑾𝑵𝑬𝑹««★™  »»𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵««
-          🥀𝒀𝑬 𝑳𝑶 𝑩𝑨𝑩𝒀 𝑨𝑷𝑲𝑰💞`,
+          🥀𝒀𝑬 𝑳𝑶 𝑩𝑨𝑩𝒀 𝑨𝑷𝑲𝑰 𝑺𝑶𝑵𝑮💞`,
         },
         event.threadID
       );

@@ -39,7 +39,7 @@ module.exports = {
     const songName = mediaType === "video" ? args.slice(0, -1).join(" ") : args.join(" ");
 
     const processingMessage = await api.sendMessage(
-      `🔍 "${songName}" Apki Request Jari Hai Please Wait....`,
+      `🔍 "${songName}"Request Jari Hai Please Wait `,
       event.threadID,
       null,
       event.messageID
@@ -83,7 +83,7 @@ module.exports = {
         {
           attachment: fs.createReadStream(thumbnailPath),
           body: `🎶 **Title:** ${topResult.title}\n »»𝑶𝑾𝑵𝑬𝑹««★™  »»𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵««
-          🥀𝒀𝑬 𝑳𝑶 𝑩𝑨𝑩𝒀 𝑨𝑷𝑲𝑰 𝑺𝑶𝑵𝑮💞`,
+          🥀𝒀𝑬 𝑳𝑶 𝑩𝑨𝑩𝒀 𝑨𝑷𝑲𝑰💞`,
         },
         event.threadID
       );
@@ -127,8 +127,7 @@ module.exports = {
       await api.sendMessage(
         {
           attachment: fs.createReadStream(downloadPath),
-          body: ` »»𝑶𝑾𝑵𝑬𝑹««★™   ${mediaType === "video" ? "Video 🎥" : "»»𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵««
-          "}   🥀𝒀𝑬 𝑳𝑶 𝑩𝑨𝑩𝒀 !**\𝑨𝑷𝑲𝑰 𝑺𝑶𝑵𝑮! 💞`,
+          body: `🎵 **𝑶𝑾𝑵𝑬𝑹 ${mediaType === "video" ? "Video 🎥" : "𝑺𝑶𝑵𝑮 🎧"} 𝑻𝑨𝒀𝑨𝑨𝑹 𝑯𝑨𝑰 𝑾𝑨𝑰𝑻 𝑲𝑨𝑹𝑶!**\n 𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵! 😍`,
         },
         event.threadID,
         event.messageID

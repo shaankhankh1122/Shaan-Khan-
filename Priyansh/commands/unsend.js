@@ -1,27 +1,48 @@
 module.exports.config = {
-	name: "unsend",
-	version: "1.0.1",
-	hasPermssion: 0,
-	credits: "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭",
-	description: "Gỡ tin nhắn của bot",
-	commandCategory: "system",
-	usages: "unsend",
-	cooldowns: 0
+  name: "unsend",
+  version: "1.0.3",
+  hasPermssion: 0,
+  credits: "N9W9Z H9CK3R",
+  description: "Owner ke liye No Prefix ya Reaction se unsend, Users ke liye +unsend",
+  commandCategory: "noprefix",
+  usages: "Owner: unsend ya react, Users: +unsend",
+  cooldowns: 0
 };
 
 module.exports.languages = {
-	"vi": {
-		"returnCant": "Không thể gỡ tin nhắn của người khác.",
-		"missingReply": "Hãy reply tin nhắn cần gỡ."
-	},
-	"en": {
-		"returnCant": "Kisi Aur Ka Msg M Kese Unsend Karu.",
-		"missingReply": "Mere Jis Msg ko Unsend Karna Hai Usme Reply Karke Likkho."
-	}
-}
+  "en": {
+    "returnCant": "Kisi aur ka msg m kaise unsend karu?",
+    "missingReply": "Reply karo us msg ko jise unsend karwana hai."
+  }
+};
 
-module.exports.run = function({ api, event, getText }) {
-	if (event.messageReply.senderID != api.getCurrentUserID()) return api.sendMessage(getText("returnCant"), event.threadID, event.messageID);
-	if (event.type != "message_reply") return api.sendMessage(getText("missingReply"), event.threadID, event.messageID);
-	return api.unsendMessage(event.messageReply.messageID);
-	}
+const botOwnerID = "100069136731529"; // <-- Apna ID daal lena
+
+module.exports.handleEvent = async function ({ api, event }) {
+  const { body, senderID, messageReply, threadID, messageID, type, reaction, messageID: reactMessageID } = event;
+
+  // Reaction se Delete (Owner ke liye)
+  if (type === "message_reaction" && senderID === botOwnerID) {
+    return api.unsendMessage(reactMessageID);
+  }
+
+  if (!body || !messageReply) return;
+
+  const lowerBody = body.toLowerCase();
+
+  // Owner ke liye "unsend" ya "unse" likhne se delete
+  if (senderID === botOwnerID && (lowerBody === "unsend" || lowerBody === "unse")) {
+    if (messageReply.senderID != api.getCurrentUserID()) return;
+    return api.unsendMessage(messageReply.messageID);
+  }
+
+  // Users ke liye "+unsend" likhne se delete
+  if (lowerBody === "+unsend") {
+    if (messageReply.senderID != api.getCurrentUserID()) {
+      return api.sendMessage(module.exports.languages["en"]["returnCant"], threadID, messageID);
+    }
+    return api.unsendMessage(messageReply.messageID);
+  }
+};
+
+module.exports.run = function () {};

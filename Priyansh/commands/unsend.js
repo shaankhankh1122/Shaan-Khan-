@@ -2,10 +2,10 @@ module.exports.config = {
   name: "unsend",
   version: "1.0.4",
   hasPermssion: 0,
-  credits: "N9W9Z H9CK3R",
-  description: "Owner ke liye unsend, react 😎 se delete, users ke liye +unsend",
+  credits: "𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍",
+  description: "Owner ke liye unsend, react 😁 se delete, users ke liye +unsend",
   commandCategory: "noprefix",
-  usages: "Owner: unsend ya 😎 react, Users: +unsend",
+  usages: "Owner: unsend ya 😁 react, Users: +unsend",
   cooldowns: 0
 };
 
@@ -16,7 +16,7 @@ module.exports.languages = {
   }
 };
 
-const botOwnerID = "100069136731529"; // <-- Apna ID daal lena
+const botOwnerID = "100016828397863"; // <-- Apna ID daal lena
 
 module.exports.handleEvent = async function ({ api, event }) {
   const { body, senderID, messageReply, threadID, messageID, type, reaction, messageID: reactMessageID } = event;

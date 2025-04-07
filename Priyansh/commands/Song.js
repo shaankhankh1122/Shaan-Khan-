@@ -4,13 +4,14 @@ const axios = require("axios");
 const yts = require("yt-search");
 
 module.exports.config = {
-  name: "song",
+  name: "Song",
   hasPermission: 0,
-  version: "1.0.0",
-  description: "Download YouTube audio (under 25MB) or provide link",
+  version: "2.0.0",
+  description: "Download YouTube music as MP3 (under 25MB)",
   credits: "SHANKAR",
+  usePrefix: false,
   cooldowns: 10,
-  commandCategory: "Utility"
+  commandCategory: "Music"
 };
 
 module.exports.run = async function ({ api, event, args }) {
@@ -31,55 +32,56 @@ module.exports.run = async function ({ api, event, args }) {
     }
 
     const { title, url } = firstResult;
-    await api.editMessage(`⏳ | "${title}" का डाउनलोड लिंक प्राप्त किया जा रहा है...`, findingMessage.messageID);
+    await api.editMessage(`⏳ | "${title}" का ऑडियो डाउनलोड किया जा रहा है...`, findingMessage.messageID);
 
-    const apiUrl = `https://mr-prince-malhotra-ytdl.vercel.app/audio?url=${encodeURIComponent(url)}`;
-    const response = await axios.get(apiUrl);
-    const responseData = response.data;
+    // ✅ Render API को कॉल करना (MP3 के लिए)
+    const apiUrl = `https://mtxuzair-uc80.onrender.com/download/`;
+    const response = await axios.post(apiUrl, { url });
 
-    if (!responseData.result || !responseData.result.url) {
+    if (!response.data.file_path) {
       await api.sendMessage(`❌ | "${title}" के लिए कोई डाउनलोड लिंक नहीं मिला।`, event.threadID);
       return;
     }
 
-    const downloadUrl = responseData.result.url;
-    const filePath = path.resolve(__dirname, "cache", `${Date.now()}-${title}.mp3`);
+    const filePath = response.data.file_path;
+    const audioUrl = `https://mtxuzair-uc80.onrender.com/audio/${filePath}`;
+    const audioPath = path.resolve(__dirname, "cache", `${Date.now()}-${title}.mp3`);
 
-    const audioResponse = await axios.get(downloadUrl, {
+    const audioResponse = await axios.get(audioUrl, {
       responseType: "stream",
       headers: { "User-Agent": "Mozilla/5.0" }
     });
 
-    const fileStream = fs.createWriteStream(filePath);
+    const fileStream = fs.createWriteStream(audioPath);
     audioResponse.data.pipe(fileStream);
 
     fileStream.on("finish", async () => {
-      const stats = fs.statSync(filePath);
+      const stats = fs.statSync(audioPath);
       const fileSizeInMB = stats.size / (1024 * 1024);
 
       if (fileSizeInMB > 25) {
-        await api.sendMessage(`❌ | "${title}" का साइज ${fileSizeInMB.toFixed(2)}MB है, जो 25MB से ज्यादा है।\n📥 डाउनलोड लिंक: ${downloadUrl}`, event.threadID);
-        fs.unlinkSync(filePath);
+        await api.sendMessage(`❌ | "${title}" का साइज ${fileSizeInMB.toFixed(2)}MB है, जो 25MB से ज्यादा है।\n🎵 डाउनलोड लिंक: ${audioUrl}`, event.threadID);
+        fs.unlinkSync(audioPath);
         return;
       }
 
       await api.sendMessage({
-        body: `🎵 | आपका ऑडियो "${title}" डाउनलोड हो गया है!`,
-        attachment: fs.createReadStream(filePath)
+        body: `🎶 | आपका गाना "${title}" तैयार है!`,
+        attachment: fs.createReadStream(audioPath)
       }, event.threadID);
 
-      fs.unlinkSync(filePath);
+      fs.unlinkSync(audioPath);
       api.unsendMessage(findingMessage.messageID);
     });
 
     audioResponse.data.on("error", async (error) => {
       console.error(error);
       await api.sendMessage(`❌ | ऑडियो डाउनलोड करने में समस्या हुई: ${error.message}`, event.threadID);
-      fs.unlinkSync(filePath);
+      fs.unlinkSync(audioPath);
     });
 
   } catch (error) {
     console.error(error.response ? error.response.data : error.message);
-    await api.sendMessage(`❌ | ऑडियो प्राप्त करने में समस्या हुई: ${error.response ? error.response.data : error.message}`, event.threadID);
+    await api.sendMessage(`❌ | म्यूजिक प्राप्त करने में समस्या हुई: ${error.response ? error.response.data : error.message}`, event.threadID);
   }
 };

@@ -1,48 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Voice Say Bot (Urdu)</title>
+  <title>اردو وائس بوٹ</title>
 </head>
 <body>
-  <h2>Click the button and say something like: "say mein acha hoon"</h2>
-  <button onclick="startBot()">Start Voice Bot</button>
+  <h2>مائیک پر کلک کریں اور کچھ کہیں جیسے: "کہو میں خوش ہوں"</h2>
+  <button onclick="startBot()">مائیک آن کریں</button>
 
   <script>
-    // Initialize speech recognition
+    // Speech Recognition (in Urdu)
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'en-US'; // still using English for commands
+    recognition.lang = 'ur-PK'; // Listening in Urdu
     recognition.interimResults = false;
 
-    // Initialize speech synthesis
+    // Speech Synthesis (in Urdu)
     const synth = window.speechSynthesis;
 
     function startBot() {
       recognition.start();
-      console.log("Listening...");
+      console.log("سن رہا ہوں...");
     }
 
     recognition.onresult = function(event) {
       const transcript = event.results[0][0].transcript.toLowerCase();
-      console.log("Heard:", transcript);
+      console.log("آپ نے کہا:", transcript);
 
-      if (transcript.startsWith("say ")) {
-        const toSay = transcript.slice(4); // remove "say "
+      if (transcript.startsWith("کہو ")) {
+        const toSay = transcript.slice(4); // Remove "کہو "
         speakUrdu(toSay);
       } else {
-        speakUrdu("برائے مہربانی 'say' سے شروع کریں");
+        speakUrdu("براہ کرم 'کہو' سے جملہ شروع کریں");
       }
     };
 
-    recognition.onerror = function(event) {
-      console.error("Error:", event.error);
-      speakUrdu("معذرت، کچھ غلطی ہوئی ہے");
-    };
-
-    function speakUrdu(text) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'ur-PK'; // Urdu language
-      synth.speak(utterance);
-    }
-  </script>
-</body>
-</html>
+    recognition.onerror = function

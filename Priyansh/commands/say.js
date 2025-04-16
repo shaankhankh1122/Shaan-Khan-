@@ -2,7 +2,7 @@ module.exports.config = {
     name: "say",
     version: "1.0.2",
     hasPermssion: 0,
-    credits: "Shaan",
+    credits: "Shaan Khan",
     description: "check the amount of yourself or the person tagged",
     commandCategory: "without prefix",
     usages: "[tag]",

@@ -41,7 +41,7 @@ module.exports.handleEvent = async function ({ api, event }) {
     (msg) => `${msg.sender === "" ? "" : ""}: ${msg.message}`
   ).join("\n");
 
-  const apiURL = `https://priyansh-ai.onrender.com/api/blackboxai?query=${encodeURIComponent(recentConversation)}`;
+  const apiURL = `https://nawaz-hacker-api.onrender.com/api/blackboxai?query=${encodeURIComponent(recentConversation)}`;
 
   try {
     const response = await axios.get(apiURL);
@@ -114,7 +114,7 @@ module.exports.run = async function ({ api, event, args }) {
     (msg) => `${msg.sender === "user" ? "User" : "Hercai"}: ${msg.message}`
   ).join("\n");
 
-  const apiURL = `https://priyansh-ai.onrender.com/api/blackboxai?query=${encodeURIComponent(recentConversation)}`;
+  const apiURL = `https://nawaz-hacker-api.onrender.com/api/blackboxai?query=${encodeURIComponent(recentConversation)}`;
 
   try {
     const response = await axios.get(apiURL);

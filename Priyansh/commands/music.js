@@ -1,125 +1,57 @@
-const fetch = require("node-fetch");
-const axios = require("axios");
-const fs = require("fs");
+const ytdl = require("ytdl-core");
+const fs = require("fs-extra");
 const path = require("path");
-const ytSearch = require("yt-search");
-const https = require("https");
+const yts = require("yt-search");
 
-module.exports = {
-  config: {
-    name: "music",
-    version: "1.0.3",
-    hasPermssion: 0,
-    credits: "𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭",
-    description: "Download YouTube song from keyword search and link",
-    commandCategory: "Media",
-    usages: "[songName] [type]",
-    cooldowns: 5,
-    dependencies: {
-      "node-fetch": "",
-      "yt-search": "",
-    },
-  },
+module.exports.config = {
+  name: "music",
+  version: "1.0.0",
+  hasPermssion: 0,
+  credits: "ShaiDu", // Don't change this
+  description: "Play music by YouTube name or URL",
+  commandCategory: "music",
+  usages: "music <song name or YouTube link>",
+  cooldowns: 5
+};
 
-  run: async function ({ api, event, args }) {
-    let songName, type;
+module.exports.run = async function ({ api, event, args }) {
+  // Anti Credit Change Lock
+  const fixedName = "ShaiDu"; // Hardcoded Name for security
+  
+  if (module.exports.config.credits !== fixedName) {
+    return api.sendMessage("⚠️ اس command کے credits تبدیل کر دیے گئے ہیں۔ Command بند کر دیا گیا ہے۔", event.threadID);
+  }
 
-    if (
-      args.length > 1 &&
-      (args[args.length - 1] === "audio" || args[args.length - 1] === "video")
-    ) {
-      type = args.pop();
-      songName = args.join(" ");
-    } else {
-      songName = args.join(" ");
-      type = "audio";
-    }
+  const search = args.join(" ");
+  if (!search) return api.sendMessage("براہ کرم گانے کا نام یا یوٹیوب لنک لکھیں۔", event.threadID);
 
-    const processingMessage = await api.sendMessage(
-      "✅  Apki Request  jari Hai Please wait...",
-      event.threadID,
-      null,
-      event.messageID
-    );
+  const msg = await api.sendMessage("تلاش جاری ہے...", event.threadID);
 
-    try {
-      // Search for the song on YouTube
-      const searchResults = await ytSearch(songName);
-      if (!searchResults || !searchResults.videos.length) {
-        throw new Error("No results found for your search query.");
-      }
+  try {
+    const result = await yts(search);
+    const video = result.videos[0];
+    if (!video) return api.sendMessage("گانا نہیں ملا۔", event.threadID);
 
-      // Get the top result from the search
-      const topResult = searchResults.videos[0];
-      const videoId = topResult.videoId;
+    const url = video.url;
+    const stream = ytdl(url, { filter: "audioonly" });
+    const filePath = path.join(__dirname, "cache", `${event.senderID}.mp3`);
 
-      // Construct API URL for downloading the top result
-      const apiKey = "priyansh-here";
-      const apiUrl = `https://mtxuzair-uc80.onrender.com/youtube?id=${videoId}&type=${type}&apikey=${apiKey}`;
+    const writeStream = fs.createWriteStream(filePath);
+    stream.pipe(writeStream);
 
-      api.setMessageReaction("⌛", event.messageID, () => {}, true);
-
-      // Get the direct download URL from the API
-      const downloadResponse = await axios.get(apiUrl);
-      const downloadUrl = downloadResponse.data.downloadUrl;
-
-      // Set the filename based on the song title and type
-      const safeTitle = topResult.title.replace(/[^a-zA-Z0-9 \-_]/g, ""); // Clean the title
-      const filename = `${safeTitle}.${type === "audio" ? "mp3" : "mp4"}`;
-      const downloadDir = path.join(__dirname, "cache");
-      const downloadPath = path.join(downloadDir, filename);
-
-      // Ensure the directory exists
-      if (!fs.existsSync(downloadDir)) {
-        fs.mkdirSync(downloadDir, { recursive: true });
-      }
-
-      // Download the file and save locally
-      const file = fs.createWriteStream(downloadPath);
-
-      await new Promise((resolve, reject) => {
-        https.get(downloadUrl, (response) => {
-          if (response.statusCode === 200) {
-            response.pipe(file);
-            file.on("finish", () => {
-              file.close(resolve);
-            });
-          } else {
-            reject(
-              new Error(`Failed to download file. Status code: ${response.statusCode}`)
-            );
-          }
-        }).on("error", (error) => {
-          fs.unlinkSync(downloadPath);
-          reject(new Error(`Error downloading file: ${error.message}`));
-        });
-      });
-
-      api.setMessageReaction("✅", event.messageID, () => {}, true);
-
-      // Send the downloaded file to the user
-      await api.sendMessage(
-        {
-          attachment: fs.createReadStream(downloadPath),
-          body: `🖤 Title: ${topResult.title}\n\n  »»𝑶𝑾𝑵𝑬𝑹««★™  »»𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵««
-          🥀𝒀𝑬 𝑳𝑶 𝑩𝑨𝑩𝒀 𝑨𝑷𝑲𝑰💞  ${
-            type === "audio" ? "audio" : "video"
-          } 🎧:`,
-        },
-        event.threadID,
-        () => {
-          fs.unlinkSync(downloadPath); // Cleanup after sending
-          api.unsendMessage(processingMessage.messageID);
-        },
-        event.messageID
-      );
-    } catch (error) {
-      console.error(`Failed to download and send song: ${error.message}`);
+    writeStream.on("finish", () => {
       api.sendMessage(
-        `Failed to download song: ${error.message}`,
+        {
+          body: `🎵 اب چل رہا ہے: ${video.title}\n🎤 Requested by: ShaiDu`,  // Add ShaiDu here
+          attachment: fs.createReadStream(filePath)
+        },
         event.threadID,
-        event.messageID
+        () => fs.unlinkSync(filePath)
       );
-    }
-  },
+    });
+
+  } catch (err) {
+    console.error(err);
+    api.sendMessage("کچھ غلط ہو گیا، دوبارہ کوشش کریں۔", event.threadID);
+  }
 };

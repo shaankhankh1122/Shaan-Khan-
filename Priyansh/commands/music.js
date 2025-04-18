@@ -39,7 +39,7 @@ module.exports = {
     const songName = mediaType === "video" ? args.slice(0, -1).join(" ") : args.join(" ");
 
     const processingMessage = await api.sendMessage(
-      `🔍 "${songName}" dhoondh rahi hoon... Ruko zara! 😏`,
+      `🔍 "${songName}" ✅Apki Request Jari Hai Please Wait ! `,
       event.threadID,
       null,
       event.messageID
@@ -126,7 +126,7 @@ module.exports = {
       await api.sendMessage(
         {
           attachment: fs.createReadStream(downloadPath),
-          body: `🎵 **Apka ${mediaType === "video" ? "Video 🎥" : "Song 🎧"} ready hai!**\nEnjoy karo! 😍`,
+          body: `🎵 **𝐎𝐖𝐍𝐄𝐑 ${mediaType === "video" ? "Video 🎥" : "Song 🎧"} 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍 !**\𝒀𝑬 𝑳𝑶 𝑩𝑨𝑩𝒀 𝑨𝑷𝑲𝑰💞! `,
         },
         event.threadID,
         event.messageID

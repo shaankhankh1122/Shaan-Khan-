@@ -1,80 +1,142 @@
-const ytdl = require("ytdl-core");
-const fs = require("fs-extra");
+const axios = require("axios");
+const fs = require("fs");
 const path = require("path");
-const yts = require("yt-search");
+const ytSearch = require("yt-search");
+const https = require("https");
 
-module.exports.config = {
-  name: "music",
-  version: "1.0.0",
-  hasPermssion: 0,
-  credits: "ShaiDu", // Don't change this
-  description: "Play music by YouTube name or URL",
-  commandCategory: "music",
-  usages: "music <song name or YouTube link>",
-  cooldowns: 5
-};
+function deleteAfterTimeout(filePath, timeout = 5000) {
+  setTimeout(() => {
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, (err) => {
+        if (!err) {
+          console.log(`✅ Deleted file: ${filePath}`);
+        } else {
+          console.error(`❌ Error deleting file: ${err.message}`);
+        }
+      });
+    }
+  }, timeout);
+}
 
-module.exports.run = async function ({ api, event, args }) {
-  // Anti Credit Change Lock
-  const fixedName = "ShaiDu"; // Hardcoded Name for security
-  
-  if (module.exports.config.credits !== fixedName) {
-    return api.sendMessage("⚠️ اس command کے credits تبدیل کر دیے گئے ہیں۔ Command بند کر دیا گیا ہے۔", event.threadID);
-  }
+module.exports = {
+  config: {
+    name: "music",
+    version: "2.0.2",
+    hasPermssion: 0,
+    credits: "uzairrajput",
+    description: "Download YouTube song or video",
+    commandCategory: "Media",
+    usages: "[songName] [optional: video]",
+    cooldowns: 5,
+  },
 
-  const search = args.join(" ");
-  if (!search) return api.sendMessage("براہ کرم گانے کا نام یا یوٹیوب لنک لکھیں۔", event.threadID);
+  run: async function ({ api, event, args }) {
+    if (args.length === 0) {
+      return api.sendMessage("⚠️ Gaane ka name tw likho na! 😒", event.threadID);
+    }
 
-  const msg = await api.sendMessage("🔍 تلاش جاری ہے...", event.threadID);
+    const mediaType = args[args.length - 1].toLowerCase() === "video" ? "video" : "audio";
+    const songName = mediaType === "video" ? args.slice(0, -1).join(" ") : args.join(" ");
 
-  try {
-    const result = await yts(search);
-    const video = result.videos[0];
-    if (!video) return api.sendMessage("😞 گانا نہیں ملا، براہ کرم دوبارہ کوشش کریں۔", event.threadID);
+    const processingMessage = await api.sendMessage(
+      `🔍 "${songName}" dhoondh rahi hoon... Ruko zara! 😏`,
+      event.threadID,
+      null,
+      event.messageID
+    );
 
-    // Debugging: Log video details
-    console.log("Video Details: ", video);
+    try {
+      // 🔎 **YouTube Search**
+      const searchResults = await ytSearch(songName);
+      if (!searchResults || !searchResults.videos.length) {
+        throw new Error("Kuch nahi mila! Gaane ka namr sahi likho. 😑");
+      }
 
-    const url = video.url;
-    const stream = ytdl(url, { filter: "audioonly" });
-    const filePath = path.join(__dirname, "cache", `${event.senderID}.mp3`);
+      // 🎵 **Top Result ka URL**
+      const topResult = searchResults.videos[0];
+      const videoUrl = `https://www.youtube.com/watch?v=${topResult.videoId}`;
 
-    const writeStream = fs.createWriteStream(filePath);
-    stream.pipe(writeStream);
+      // 🖼 **Download Thumbnail**
+      const thumbnailUrl = topResult.thumbnail;
+      const safeTitle = topResult.title.replace(/[^a-zA-Z0-9]/g, "_");
+      const downloadDir = path.join(__dirname, "cache");
+      if (!fs.existsSync(downloadDir)) {
+        fs.mkdirSync(downloadDir, { recursive: true });
+      }
+      const thumbnailPath = path.join(downloadDir, `${safeTitle}.jpg`);
 
-    writeStream.on("finish", () => {
-      // Debugging: Log when file is ready
-      console.log("Audio file downloaded and ready for sending.");
+      const thumbnailFile = fs.createWriteStream(thumbnailPath);
+      await new Promise((resolve, reject) => {
+        https.get(thumbnailUrl, (response) => {
+          response.pipe(thumbnailFile);
+          thumbnailFile.on("finish", () => {
+            thumbnailFile.close(resolve);
+          });
+        }).on("error", (error) => {
+          fs.unlinkSync(thumbnailPath);
+          reject(new Error(`Thumbnail download failed: ${error.message}`));
+        });
+      });
 
-      const songDetails = `
-🎵 **گانا چل رہا ہے**:
-    
-**🎶 عنوان**: ${video.title}
-**⏱️ دورانیہ**: ${video.timestamp}
-**🎤 گانے کا فنکار**: ${video.author.name}
-
-🔗 [YouTube لنک](https://youtu.be/${video.videoId})
-
-📸 **تصویر**:
-${video.thumbnail}
-
-💬 **Requested by**: *ShaiDu*`
-
-      api.sendMessage(
+      // 📩 **Send Thumbnail First**
+      await api.sendMessage(
         {
-          body: songDetails,
-          attachment: fs.createReadStream(filePath)
+          attachment: fs.createReadStream(thumbnailPath),
+          body: `🎶 **Title:** ${topResult.title}\n👀 ..Thora sa Wait karo Song load Ho raha hai 😘`,
+        },
+        event.threadID
+      );
+
+      // 🗑 **Delete Thumbnail After 5 Seconds**
+      deleteAfterTimeout(thumbnailPath, 5000);
+
+      // 🖥 **API Call to YouTube Downloader**
+      const apiUrl = `https://uzair-mtx-music-api-key.onrender.com/download?url=${encodeURIComponent(videoUrl)}&type=${mediaType}`;
+      const downloadResponse = await axios.get(apiUrl);
+
+      if (!downloadResponse.data.file_url) {
+        throw new Error("Download fail ho gaya. 😭");
+      }
+
+      const downloadUrl = downloadResponse.data.file_url.replace("http:", "https:");
+      const filename = `${safeTitle}.${mediaType === "video" ? "mp4" : "mp3"}`;
+      const downloadPath = path.join(downloadDir, filename);
+
+      // ⬇️ **Download Media File**
+      const file = fs.createWriteStream(downloadPath);
+      await new Promise((resolve, reject) => {
+        https.get(downloadUrl, (response) => {
+          if (response.statusCode === 200) {
+            response.pipe(file);
+            file.on("finish", () => {
+              file.close(resolve);
+            });
+          } else {
+            reject(new Error(`Download fail ho gaya. Status: ${response.statusCode}`));
+          }
+        }).on("error", (error) => {
+          fs.unlinkSync(downloadPath);
+          reject(new Error(`Error downloading file: ${error.message}`));
+        });
+      });
+
+      api.setMessageReaction("✅", event.messageID, () => {}, true);
+
+      // 🎧 **Send the MP3/MP4 File**
+      await api.sendMessage(
+        {
+          attachment: fs.createReadStream(downloadPath),
+          body: `🎵 **Apka ${mediaType === "video" ? "Video 🎥" : "Song 🎧"} ready hai!**\nEnjoy karo! 😍`,
         },
         event.threadID,
-        () => {
-          console.log("Message Sent!"); // Debugging message sent
-          fs.unlinkSync(filePath); // Delete the file after sending
-        }
+        event.messageID
       );
-    });
 
-  } catch (err) {
-    console.error(err);
-    api.sendMessage("😞 کچھ غلط ہو گیا، دوبارہ کوشش کریں۔", event.threadID);
-  }
+      // 🗑 **Auto Delete File After 5 Seconds**
+      deleteAfterTimeout(downloadPath, 5000);
+    } catch (error) {
+      console.error(`❌ Error: ${error.message}`);
+      api.sendMessage(`❌ Error: ${error.message} 😢`, event.threadID, event.messageID);
+    }
+  },
 };

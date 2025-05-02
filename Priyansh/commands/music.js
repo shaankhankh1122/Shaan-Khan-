@@ -37,7 +37,7 @@ module.exports = {
     }
 
     const processingMessage = await api.sendMessage(
-      "✅ Apki Request Jarii Hai. Please wait...",
+      "✅ Apki Request Jari Hai. Please wait...",
       event.threadID,
       null,
       event.messageID
@@ -55,7 +55,7 @@ module.exports = {
       const videoId = topResult.videoId;
 
       // Construct API URL for downloading the top result
-      const apiKey = "priyansh-here";
+      const apiKey = "apikey=uzair=here";
       const apiUrl = `https://uzair-youtube-api-final.onrender.com/youtube?id=${videoId}&type=${type}&apikey=${apiKey}`;
 
       api.setMessageReaction("⌛", event.messageID, () => {}, true);

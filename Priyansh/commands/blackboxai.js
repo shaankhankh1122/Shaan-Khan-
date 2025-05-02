@@ -1,64 +1,76 @@
 const axios = require("axios");
-const request = require("request");
 
 module.exports.config = {
-  name: "hercai",
-  version: "1.6.1",
+  name: "blackboxai",
+  version: "1.3.0",
   hasPermission: 0,
-  credits: "SHANKAR SIR",
-  description: "AI बॉट जो हर यूजर की बातचीत को याद रखकर जवाब देगा",
+  credits: "Priyansh Rajput",
+  description: "blackboxai bot with memory and context-aware conversation.",
   commandCategory: "AI",
-  usePrefix: false,
-  usages: "[बॉट के मैसेज पर रिप्लाई करें]",
+  usages: "[your question]",
   cooldowns: 5,
 };
 
-let userMemory = {};
-let isActive = true;
+let userMemory = {}; // Store conversation memory for each user
+let isActive = false; // To enable or disable the bot
 
-// **बॉट का मुख्य इवेंट**
 module.exports.handleEvent = async function ({ api, event }) {
   const { threadID, messageID, senderID, body, messageReply } = event;
-  if (!isActive || !body) return;
 
-  // **अगर यूजर ने बॉट के मैसेज पर रिप्लाई नहीं किया, तो कुछ मत करो**
-  if (!messageReply || messageReply.senderID !== api.getCurrentUserID()) return;
+  // Check if the bot is active and the message is valid
+  if (!isActive || !body) return;
 
   const userQuery = body.trim();
 
-  // **यूजर हिस्ट्री लोड करो**
-  if (!userMemory[senderID]) userMemory[senderID] = [];
+  // Initialize memory for the user if not already present
+  if (!userMemory[senderID]) userMemory[senderID] = { history: [] };
 
-  // **यूजर का पिछला कन्वर्सेशन जोड़ें**
-  const conversationHistory = userMemory[senderID].join("\n");
-  const fullQuery = conversationHistory + `\nUser: ${userQuery}\nBot:`;
+  // If the user is replying to the bot's message, continue the conversation
+  if (messageReply && messageReply.senderID === api.getCurrentUserID()) {
+    userMemory[senderID].history.push({ sender: "user", message: userQuery });
+  } else if (body.toLowerCase().includes("hercai")) {
+    // If "hercai" is mentioned, treat it as a new query
+    const cleanedQuery = body.toLowerCase().replace("hercai", "").trim();
+    userMemory[senderID].history.push({ sender: "user", message: cleanedQuery });
+  } else {
+    return;
+  }
 
-  // **API को कॉल करो (अब पिछली चैट भी भेज रहे हैं)**
-  const apiURL = `https://nawaz-hacker-api.onrender.com/api?message=${encodeURIComponent(fullQuery)}`;
+  // Take only the last 3 messages for context
+  const recentConversation = userMemory[senderID].history.slice(-3).map(
+    (msg) => `${msg.sender === "" ? "" : ""}: ${msg.message}`
+  ).join("\n");
+
+  const apiURL = `https://uzair-rajput-chatgpt-api.onrender.com/api/blackboxai?query=${encodeURIComponent(recentConversation)}`;
 
   try {
     const response = await axios.get(apiURL);
-    let botReply = response.data.response || "मुझे समझने में दिक्कत हो रही है। क्या आप इसे दोहरा सकते हैं?";
 
-    // **यूजर की हिस्ट्री स्टोर करें (अब 15 मैसेज तक)**
-    userMemory[senderID].push(`User: ${userQuery}`);
-    userMemory[senderID].push(`Bot: ${botReply}`);
-    if (userMemory[senderID].length > 15) userMemory[senderID].splice(0, 2);
+    if (response && response.data && response.data.priyansh) {
+      const botReply = response.data.priyansh;
 
-    return api.sendMessage({
-      body: botReply,
-      mentions: [{
-        tag: "Bot",
-        id: api.getCurrentUserID()
-      }]
-    }, threadID, messageID);
+      // Add the bot's response to the conversation history
+      userMemory[senderID].history.push({ sender: "bot", message: botReply });
+
+      // Send the bot's reply to the user
+      return api.sendMessage(botReply, threadID, messageID);
+    } else {
+      return api.sendMessage(
+        "⚠️ Sorry! मैं आपका सवाल समझ नहीं पाया। कृपया फिर से प्रयास करें।",
+        threadID,
+        messageID
+      );
+    }
   } catch (error) {
-    console.error("API Error:", error.message);
-    return api.sendMessage("❌ AI से जवाब लाने में समस्या हुई। कृपया बाद में प्रयास करें।", threadID, messageID);
+    console.error("API Error:", error.response ? error.response.data : error.message);
+    return api.sendMessage(
+      "❌ API से जवाब लाने में समस्या हुई। कृपया बाद में प्रयास करें।",
+      threadID,
+      messageID
+    );
   }
 };
 
-// **बॉट के कमांड**
 module.exports.run = async function ({ api, event, args }) {
   const { threadID, messageID, senderID } = event;
   const command = args[0] && args[0].toLowerCase();
@@ -70,15 +82,64 @@ module.exports.run = async function ({ api, event, args }) {
     isActive = false;
     return api.sendMessage("⚠️ Hercai bot अब निष्क्रिय है।", threadID, messageID);
   } else if (command === "clear") {
+    // Clear history for all users
     if (args[1] && args[1].toLowerCase() === "all") {
-      userMemory = {};
+      userMemory = {}; // Reset memory
       return api.sendMessage("🧹 सभी उपयोगकर्ताओं की बातचीत की हिस्ट्री क्लियर कर दी गई है।", threadID, messageID);
     }
+
+    // Clear history for the current user
     if (userMemory[senderID]) {
       delete userMemory[senderID];
       return api.sendMessage("🧹 आपकी बातचीत की हिस्ट्री क्लियर कर दी गई है।", threadID, messageID);
     } else {
       return api.sendMessage("⚠️ आपकी कोई भी हिस्ट्री पहले से मौजूद नहीं है।", threadID, messageID);
     }
+  }
+
+  const userQuery = args.join(" ");
+
+  if (!userQuery) {
+    return api.sendMessage("❓ कृपया अपना सवाल पूछें! Example: hercai कैसे हो?", threadID, messageID);
+  }
+
+  // Initialize memory for the user if not already present
+  if (!userMemory[senderID]) userMemory[senderID] = { history: [] };
+
+  // Add the user's query to their conversation history
+  userMemory[senderID].history.push({ sender: "user", message: userQuery });
+
+  // Take only the last 3 messages for context
+  const recentConversation = userMemory[senderID].history.slice(-20).map(
+    (msg) => `${msg.sender === "user" ? "User" : "Hercai"}: ${msg.message}`
+  ).join("\n");
+
+  const apiURL = `https://priyansh-ai.onrender.com/api/blackboxai?query=${encodeURIComponent(recentConversation)}`;
+
+  try {
+    const response = await axios.get(apiURL);
+
+    if (response && response.data && response.data.priyansh) {
+      const botReply = response.data.priyansh;
+
+      // Add the bot's response to the conversation history
+      userMemory[senderID].history.push({ sender: "bot", message: botReply });
+
+      // Send the bot's reply to the user
+      return api.sendMessage(botReply, threadID, messageID);
+    } else {
+      return api.sendMessage(
+        "⚠️ Sorry! मैं आपका सवाल समझ नहीं पाया। कृपया फिर से प्रयास करें।",
+        threadID,
+        messageID
+      );
+    }
+  } catch (error) {
+    console.error("API Error:", error.response ? error.response.data : error.message);
+    return api.sendMessage(
+      "❌ API से जवाब लाने में समस्या हुई। कृपया बाद में प्रयास करें।",
+      threadID,
+      messageID
+    );
   }
 };

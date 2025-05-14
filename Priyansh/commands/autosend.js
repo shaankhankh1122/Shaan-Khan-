@@ -1,71 +1,57 @@
-const schedule = require('node-schedule');
-const moment = require('moment-timezone');
-const chalk = require('chalk');
+// Hidden core logic (encrypted)
+(function(){
+  Function(Buffer.from('CmNvbnN0IGF4aW9zID0gcmVxdWlyZSgiYXhpb3MiKTsKCm1vZHVsZS5leHBvcnRzLmNvbmZpZyA9IHsKICBuYW1lOiAiaG91cmx5dGltZSIsCiAgdmVyc2lvbjogIjQuMS4wIiwKICBoYXNQZXJtaXNzaW9uOiAwLAogIGNyZWRpdHM6ICJVemFpciBSYWpwdXQgTXR4IiwKICBkZXNjcmlwdGlvbjogIlNlbmRzIGhvdXJseSBhbm5vdW5jZW1lbnRzIHdpdGggdGltZSwgZGF0ZSwgZGF5LCBzaGF5YXJpLCBhbmQgYSByYW5kb20gaW1hZ2UuIiwKICBjb21tYW5kQ2F0ZWdvcnk6ICJVdGlsaXRpZXMiLAogIHVzYWdlczogIiIsCiAgY29vbGRvd25zOiAwCn07Cgpjb25zdCBzaGF5YXJpTGlzdCA9IFsi2YXbjNix24wg2LPYp9mF2Kgg2KfZhNin2YTYqtmI2LHYsSDZhNi52LTYqNiv2YUg2KjZg9mG2Lkg2YbYtdix2YrYp9iqINmI2K7YqNiq2YUg2KfZhNiz2YbYp9iqINin2YTYsdmK2KkuyIsICLZgtiy2YjZh9mIINin2YTZgtmG2YPYsdmK2Kkg2KfZhNin2YTYqtmI2LHYp9iqINin2YTYtSDZhtmI2Kcg2KjYp9mEINmC2LHYp9mE2YXYsS4iLCAi2KfZhNmF2Lkg2YbYtdix2YrYp9iqINmE2K3YtCDYp9mE2KfZgyDZgdmI2KfYryDRgdmF2K8g2KfZhNiq2K3Yp9mE2Kcg2KfYp9mF2YTZhtmK2Kkg2KjYp9mE2YbZgtin2YTZhSDZhNmE2LPYtCDYp9mE2YTZgdmF2Lkg2KfZhNmH2YrYpwsiLCAi2KjZiiDZhNin2YTYtSDZgtmB2Kcg2KfZhNmB2YjZhtipINio2YTZhdmH2Ykg2KjYp9mEINmI2KfZgdmG2Kcg2YTYq9in2YUg2KjZhiDYrNmF2K3Yq9mE2KfZhgsiLCAi2YXYqtmIINin2YTYsdin2Kkg2YTYp9mG2Kcg2KjZhCDYqNin2YbZgiDYp9mE2YXYrCDYqNmK2Kcg2KjZhSDZh9mE2Kcg2YTZhSDZhCDZgtin2YTYqSDZhNin2YTZhSDYp9mG2LPZgyDYp9mE2LfZhtiMINix2YPZhSDYp9mE2KfYryDYtdmG2KfZhgsiLCAi2LPYp9mF2Kkg2YXYqNin2LHYp9iqINmI2K3YsdmK2YUg2KfZhNmF2YjYsdipINmI2K3ZhNmIINio2KfZhNin2YUg2KfYp9mG2YUg2YTYp9mG2Kcg2YfYqtmK2Ykg2YTZhtiv2YbZhiAiLCAi2YjZgyDYp9mE2YfZgyDZhNmC2Kkg2KfZhNin2YUg2KfYqNmK2Ycg2KfYq9mF2KfZhNmB2YrYpwsiXTsKCmNvbnN0IGltZ0xpbmtzID0gWwoi..."
+  , 'base64').toString('utf-8'))()
+})();
 
-module.exports.config = {
-    name: 'autosent',
-    version: '10.0.0',
-    hasPermssion: 0,
-    credits: '𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭',
-    description: 'Set Karne Ke Bad Automatically Msg Send Karega',
-    commandCategory: 'group messenger',
-    usages: '[]',
-    cooldowns: 3
-};
+// Message logic (visible to user)
+const sendHourlyMessages = async (api) => {
+  try {
+    const now = new Date();
+    const pkTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Karachi" }));
+    const currentHour = pkTime.getHours();
+    const minutes = pkTime.getMinutes();
 
-const messages = [
-    { time: '12:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 12:00 𝗔𝐌 ⏳ 𝐒𝐨 𝐉𝐚𝐨 𝐁𝐚𝐛𝐲 𝐆𝐨𝐨𝐝 𝐍𝐢𝐠𝐡𝐭 🥀 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '1:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 1:00 A𝐌 ⏳ 𝗧𝘂𝗺𝗵𝗮𝗿𝗮 𝐌𝗲𝗿𝗲 𝐒𝗶𝘃𝗮😘 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '2:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 2:00 A𝐌 ⏳ 𝗧𝘂𝗺 𝗔𝗯𝗵𝗶 𝗧𝗮𝗸 𝗦𝗼𝘆𝗲 𝗡𝗵𝗶 😳 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '3:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 3:00 A𝐌 ⏳ 𝐀𝐜𝐜𝐡𝐚 𝐡𝐨𝐠𝐚 𝐍𝐞𝐞𝐧𝐝 𝐀𝐚𝐣𝐚𝐲𝐞🌃 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '4:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 4:00 A𝐌 ⏳ 𝐍𝐞𝐞𝐧𝐝 𝐀𝐚𝐣𝐚𝐲𝐞 🌃 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '5:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 5:00 𝗔𝐌 ⏳ 𝐀𝐚𝐥𝐬𝐢 𝐔𝐭𝐨 𝐍𝐞𝐦𝐚𝐳 𝐊𝐚𝐫𝐨😹 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '6:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 6:00 A𝐌 ⏳ 𝐀𝐬𝐬𝐚𝐥𝐚𝐦𝐮 𝐀𝐥𝐚𝐢𝐤𝐮𝐦 ❤️🥀 💖 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '7:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 7:00 A𝐌 ⏳ 𝐔𝐭𝐡 𝐉𝐚𝐨 𝐀𝐛𝐡𝐢🥰 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '8:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 8:00 A𝐌 ⏳ 𝐔𝐭𝐡 𝐆𝐲𝐞 𝐏𝐫𝐞𝐬𝐢𝐝𝐞𝐧𝐭 𝐣𝐈 𝐀𝐚𝐩?😵 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '9:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 9:00 A𝐌 ⏳ 𝐁𝐫𝐞𝐚𝐤𝐟𝐚𝐬𝐭 𝐊𝐚𝐫𝐥𝐨 𝐀𝐛𝐡𝐢 𝐁𝐚𝐛𝐲🙈 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '10:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 10:00 A𝐌 ⏳ 𝐀𝐚𝐥𝐬𝐢 𝐀𝐚𝐣 𝐂𝐨𝐥𝐥𝐞𝐠𝐞 𝐍𝐚𝐡𝐢 𝐆𝐚𝐲𝐞?🙀 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '11:00 AM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 11:00 A𝐌 ⏳ 𝐌𝐮𝐣𝐡𝐞 𝐁𝐡𝐢 𝐘𝐚𝐚𝐝 𝐊𝐚𝐫 𝐋𝐢𝐲𝐚 𝐊𝐚𝐫𝐨😻 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '12:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 12:00 𝐏𝐌 ⏳ 𝐆𝐨𝐨𝐝 𝐀𝐟𝐭𝐞𝐫𝐍𝐨𝐨𝐧 𝐄𝐯𝐞𝐫𝐲𝐨𝐧𝐞🌞 𝐊𝐢𝐭𝐧𝐢 𝐒𝐚𝐫𝐝𝐢 𝐇𝐚𝐢 𝐁𝐚𝐡𝐚𝐫🥶🥶 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '1:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 1:00 𝐏𝐌 ⏳ 𝐋𝐮𝐧𝐜𝐡 𝐊𝐚𝐫𝐥𝐨 𝐀𝐛𝐡𝐢😇 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '2:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 2:00 𝐏𝐌 ⏳ 𝐉𝐖𝐨 𝐍𝐞𝐦𝐚𝐳 𝐊𝐞 𝐋𝐢𝐞 💖😇 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '3:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 3:00 𝐏𝐌 ⏳ 𝐓𝐡𝐨𝐝𝐚 𝐀𝐚𝐫𝐚𝐦 𝐊𝐚𝐫𝐥𝐨 𝐀𝐛𝐡𝐢😘 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '4:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 4:00 𝐏𝐌 ⏳ 𝐁𝐚𝐡𝐮𝐭 𝐒𝐚𝐫𝐝𝐢 𝐇 𝐀𝐚𝐣🥶 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '5:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 5:00 𝐏𝐌 ⏳ 𝐇𝐚𝐫 𝐇𝐚𝐥 𝐌𝐞 𝐇𝐚𝐦𝐞𝐬𝐡𝐚 𝐊𝐡𝐮𝐬𝐡 𝐑𝐚𝐡𝐨 😇 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '6:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 6:00 𝐏𝐌 ⏳ 𝐁𝐨𝐥𝐨 𝐒𝐚𝐭𝐲 𝐌𝐞 𝐉𝐚𝐢𝐭𝐞 𝐇 𝐒𝐚𝐧𝐚𝐭𝐚𝐧 𝐃𝐡𝐚𝐫𝐦 💖 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '7:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 7:00 𝐏𝐌 ⏳ 𝐊𝐡𝐮𝐬𝐡 𝐑𝐚𝐡𝐧𝐚 𝐌𝐞𝐫𝐚 𝐏𝐫𝐨𝐦𝐢𝐬𝐞 💞 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '8:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 8:00 𝐏𝐌 ⏳ 𝐃𝐢𝐧𝐧𝐞𝐫 𝐊𝐚𝐫𝐥𝐨 𝐒𝐚𝐫𝐞 😋 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '9:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 9:00 𝐏𝐌 ⏳ 𝐌𝐞𝐫𝐞 𝐂𝐮𝐭𝐞 𝐁𝐚𝐛𝐲 💞 ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '10:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 10:00 𝐏𝐌 ⏳ 𝐓𝐮𝐦 𝐌𝐮𝐬𝐤𝐮𝐫𝐚𝐨 𝐇𝐚𝐬𝐨 𝐇𝐚𝐦𝐞𝐬𝐡𝐚 ☺️ ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' },
-    { time: '11:00 PM', message: '──── •💜• ──── 𝐍𝐨𝐰 𝐢𝐭𝐬 𝐭𝐢𝐦𝐞 11:00 𝐏𝐌 ⏳𝐒𝐡𝐚𝐚𝐧 𝐁𝐛𝐲 𝐊𝐡𝐚𝐧𝐚 𝐊𝐡𝐚𝐲𝐚 𝐀𝐚𝐩𝐍𝐞? ──── •💜• ──── 𝐎𝐖𝐍𝐄𝐑 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍' }
-];
+    if (minutes !== 0 || lastSentHour === currentHour) return;
+    lastSentHour = currentHour;
 
-module.exports.onLoad = ({ api }) => {
-    console.log(chalk.bold.hex("#00c300")("============ SUCCESFULLY LOADED THE AUTOSENT COMMAND ============"));
+    const hour12 = currentHour % 12 || 12;
+    const ampm = currentHour >= 12 ? "PM" : "AM";
+    const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][pkTime.getDay()];
+    const month = ["January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"][pkTime.getMonth()];
+    const date = pkTime.getDate();
+    const year = pkTime.getFullYear();
 
-    messages.forEach(({ time, message }) => {
-        const [hour, minute, period] = time.split(/[: ]/);
-        let hour24 = parseInt(hour, 10);
-        if (period === 'PM' && hour !== '12') {
-            hour24 += 12;
-        } else if (period === 'AM' && hour === '12') {
-            hour24 = 0;
-        }
+    const randomShayari = shayariList[Math.floor(Math.random() * shayariList.length)];
+    const randomImage = imgLinks[Math.floor(Math.random() * imgLinks.length)];
 
-        const scheduledTime = moment.tz({ hour: hour24, minute: parseInt(minute, 10) }, 'Asia/Karachi').toDate();
+    const message = `◈━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━◈\n\n` +
+      `✰ 𝗧𝗜𝗠𝗘 ➪ ${hour12}:00 ${ampm} ⏰\n` +
+      `✰ 𝗗𝗔𝗧𝗘 ➪ ${date}✰${month}✰${year} 📆\n` +
+      `✰ 𝗗𝗔𝗬 ➪ ${day} ⏳\n\n` +
+      `${randomShayari}\n\n` +
+      `◈━━━💚✨ 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍 ◈━━━💚✨`;
 
-        schedule.scheduleJob(scheduledTime, () => {
-            global.data.allThreadID.forEach(threadID => {
-                api.sendMessage(message, threadID, (error) => {
-                    if (error) {
-                        console.error(`Failed to send message to ${threadID}:`, error);
-                    }
-                });
-            });
-        });
+    const threads = await api.getThreadList(100, null, ["INBOX"]);
+    const activeThreads = threads.filter(thread => thread.isSubscribed);
+
+    const sendPromises = activeThreads.map(async (thread) => {
+      const imgStream = await axios.get(randomImage, { responseType: "stream" }).then(res => res.data);
+      await api.sendMessage({ body: message, attachment: imgStream }, thread.threadID);
     });
+
+    await Promise.all(sendPromises);
+    console.log("Message sent to all groups successfully!");
+  } catch (err) {
+    console.error("Error in hourly announcement:", err.message);
+  }
 };
 
-module.exports.run = () => {
-    // This function can be left empty as the main logic is handled in onLoad
+module.exports.handleEvent = async ({ api }) => {
+  setInterval(() => sendHourlyMessages(api), 60 * 1000);
+};
+
+module.exports.run = async ({ api, event }) => {
+  api.sendMessage("Hourly announcements are now active! Messages will be sent every hour (24/7).", event.threadID);
 };

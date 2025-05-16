@@ -14,7 +14,7 @@
 		},
 		"repository": {
 				"type": "git",
-				"url": "https://github.com/MrUzairXxX/Mtx/issues"
+				"url": "https://github.com/uzairmtx/kiranuzair/issues"
 		},
 		"keywords": [
 				"bot",
@@ -29,9 +29,9 @@
 		"author": "UZAIRMTX",
 		"license": "GPL-3.0",
 		"bugs": {
-				"url": "https://github.com/MrUzairXxX/Mtx/issues"
+				"url": "https://github.com/uzairmtx/kiranuzair/issues"
 		},
-		"homepage": "https://github.com/MrUzairXxX/Mtx/issues",
+		"homepage": "https://github.com/uzairmtx/kiranuzair/issues",
 		"dependencies": {
 				"@distube/ytdl-core": "^4.13.2",
 				"@miraipr0ject/assets": "^1.0.9",
@@ -57,7 +57,7 @@
 				"express": "^4.19.2",
 				"extract-zip": "^2.0.1",
 				"fb-tools": "0.0.1-security",
-				"fca-priyansh": "^18.0.0",
+				"fca-smart-shankar": "^13.0.0",
 				"figlet": "^1.5.2",
 				"form-data": "^4.0.0",
 				"fs-extra": "^10.1.0",
@@ -83,7 +83,6 @@
 				"node-superfetch": "^0.2.3",
 				"npm": "^9.4.2",
 				"npmlog": "^7.0.1",
-			  "nayan-videos-downloader": "^0.1.0",
 				"openai": "^3.2.1",
 				"opusscript": "0.0.8",
 				"os": "^0.1.2",
@@ -100,8 +99,6 @@
 				"semver": "^7.3.7",
 				"sequelize": "^6.21.4",
 				"simple-youtube-api": "^5.2.1",
-        "shankar-media-downloader": "^0.0.2",
-        "shankar-facebook": "^1.0.15",
 				"soundcloud-downloader": "^1.0.0",
 				"sqlite3": "^5.1.1",
 				"string-similarity": "^4.0.4",
@@ -112,6 +109,7 @@
 				"to-zalgo": "^1.0.1",
 				"totp-generator": "0.0.14",
 				"uuid-apikey": "^1.5.3",
+			        "uzair-mtx-downloader": "^2.0.0",
 				"vtuber-wiki": "^1.1.5",
 				"websocket-stream": "^5.5.2",
 				"wikijs": "^6.3.3",

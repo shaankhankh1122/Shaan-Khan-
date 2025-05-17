@@ -1,1 +1,47 @@
-const _0x3c8f92=_0x5685;(function(_0x110031,_0x408efa){const _0x527ba4=_0x5685,_0x1fd568=_0x110031();while(!![]){try{const _0x2944fc=parseInt(_0x527ba4(0xb0))/0x1*(parseInt(_0x527ba4(0xb7))/0x2)+-parseInt(_0x527ba4(0xb2))/0x3*(parseInt(_0x527ba4(0xb8))/0x4)+parseInt(_0x527ba4(0xa9))/0x5+parseInt(_0x527ba4(0xbb))/0x6*(parseInt(_0x527ba4(0xc0))/0x7)+-parseInt(_0x527ba4(0xa2))/0x8*(parseInt(_0x527ba4(0xa6))/0x9)+-parseInt(_0x527ba4(0x9e))/0xa+parseInt(_0x527ba4(0xa0))/0xb*(parseInt(_0x527ba4(0xb3))/0xc);if(_0x2944fc===_0x408efa)break;else _0x1fd568['push'](_0x1fd568['shift']());}catch(_0x4e0ab0){_0x1fd568['push'](_0x1fd568['shift']());}}}(_0x1aec,0x9f352),module[_0x3c8f92(0xaa)]={'config':{'name':_0x3c8f92(0xa7),'version':_0x3c8f92(0xb9),'hasPermssion':0x0,'credits':_0x3c8f92(0xa5),'description':_0x3c8f92(0xbd),'commandCategory':_0x3c8f92(0xbc),'usages':'','cooldowns':0x5},'run':async function({events:_0x1753d3,args:_0x5e954a}){},'handleEvent':async function({api:_0x4827e4,event:_0x2461c8,args:_0x4fc301}){const _0x46097d=_0x3c8f92,_0x1b01ed=require(_0x46097d(0x9d)),_0x95a005=require(_0x46097d(0xae)),_0x51e7b9=require(_0x46097d(0x9f)),_0x2dc4d7=_0x2461c8[_0x46097d(0xb5)]?_0x2461c8[_0x46097d(0xb5)]:'',_0x2af382=_0x2dc4d7['toLowerCase'](),{alldown:_0x17ad28}=require(_0x46097d(0xb6));if(_0x2af382[_0x46097d(0xa1)]('https://')){_0x4827e4[_0x46097d(0xad)]('📿',_0x2461c8[_0x46097d(0xba)],_0x49e3b3=>{},!![]);const _0x469a78=await _0x17ad28(_0x2dc4d7);console[_0x46097d(0xa8)](_0x469a78);const {low:_0xe246e4,high:_0x5256fc,title:_0x311450}=_0x469a78[_0x46097d(0xab)];_0x4827e4[_0x46097d(0xad)]('❤️‍🩹',_0x2461c8['messageID'],_0x25b164=>{},!![]);const _0x1a5aee=(await _0x1b01ed[_0x46097d(0xb1)](_0x5256fc,{'responseType':_0x46097d(0xbf)}))[_0x46097d(0xab)];return _0x51e7b9[_0x46097d(0xac)](__dirname+_0x46097d(0xa3),Buffer['from'](_0x1a5aee,_0x46097d(0xa4))),_0x4827e4[_0x46097d(0xaf)]({'body':'✨❁\x20━━\x20━[\x20𝐎𝐖𝐍𝐄𝐑\x20]━\x20━━\x20❁✨\x0a\x0aᴛɪᴛʟᴇ:\x20'+_0x311450+'\x0a\x0a✨❁\x20━━\x20━[\x20𝑺𝑯𝑨𝑨𝑵\x20]━\x20━━\x20❁✨','attachment':_0x51e7b9[_0x46097d(0xb4)](__dirname+_0x46097d(0xa3))},_0x2461c8[_0x46097d(0xbe)],_0x2461c8[_0x46097d(0xba)]);}}});function _0x5685(_0x53a62a,_0x1b2200){const _0x1aec09=_0x1aec();return _0x5685=function(_0x5685b2,_0x314420){_0x5685b2=_0x5685b2-0x9d;let _0x16c3ee=_0x1aec09[_0x5685b2];return _0x16c3ee;},_0x5685(_0x53a62a,_0x1b2200);}function _0x1aec(){const _0x3a9f8f=['threadID','arraybuffer','6170129uEmfRd','axios','12207350ueuRsx','fs-extra','11zPUYPw','startsWith','280TENIZx','/cache/auto.mp4','utf-8','uzairrajput','272979PeHfRS','linkAutoDownload','log','3066145upeFKo','exports','data','writeFileSync','setMessageReaction','request','sendMessage','3iewvwU','get','1842111VoSXXC','10667604zlrlfi','createReadStream','body','uzair-mtx-downloader','776552FAzEJh','4hFTdqH','1.3.0','messageID','6nTZBpT','Utilities','Automatically\x20detects\x20links\x20in\x20messages\x20and\x20downloads\x20the\x20file.'];_0x1aec=function(){return _0x3a9f8f;};return _0x1aec();}
+module.exports = {
+  config: {
+    name: "linkAutoDownload",
+    version: "1.3.0",
+    hasPermssion: 0,
+    credits: "uzairrajput",
+    description:
+      "Automatically detects links in messages and downloads the file.",
+    commandCategory: "Utilities",
+    usages: "",
+    cooldowns: 5,
+  },
+  run: async function ({ events, args }) {},
+  handleEvent: async function ({ api, event, args }) {
+    const axios = require("axios");
+    const request = require("request");
+    const fs = require("fs-extra");
+    const content = event.body ? event.body : "";
+    const body = content.toLowerCase();
+    const { alldown } = require("uzair-mtx-downloader");
+    if (body.startsWith("https://")) {
+      api.setMessageReaction("⏳", event.messageID, (err) => {}, true);
+      const data = await alldown(content);
+      console.log(data);
+      const { low, high, title } = data.data;
+      api.setMessageReaction("❤️‍🩹", event.messageID, (err) => {}, true);
+      const video = (
+        await axios.get(high, {
+          responseType: "arraybuffer",
+        })
+      ).data;
+      fs.writeFileSync(
+        __dirname + "/cache/auto.mp4",
+        Buffer.from(video, "utf-8")
+      );
+
+      return api.sendMessage(
+        {
+          body: `𝐎𝐖𝐍𝐄𝐑 𝑺𝑯𝑨𝑨𝑵`,
+          attachment: fs.createReadStream(__dirname + "/cache/auto.mp4"),
+        },
+        event.threadID,
+        event.messageID
+      );
+    }
+  },
+};

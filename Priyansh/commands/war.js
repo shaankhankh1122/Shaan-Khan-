@@ -5,7 +5,7 @@ module.exports.config = {
   name: "war",
   version: "1.0.0",
   hasPermssion: 2,
-  credits: "Shaan Khan",
+  credits: "Uzair Rajput Mtx",
   description: "Enables war mode against a UID in multiple languages",
   commandCategory: "Admin",
   usages: "war on [UID] [language] / war off",

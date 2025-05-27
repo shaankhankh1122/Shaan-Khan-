@@ -55,8 +55,8 @@ module.exports = {
       const videoId = topResult.videoId;
 
       // Construct API URL for downloading the top result
-      const apiKey = "apikey=uzair=here";
-      const apiUrl = `https://uzair-youtube-api-final.onrender.com/youtube?id=${videoId}&type=${type}&apikey=${apiKey}`;
+      const apiKey = "priyansh-here";
+      const apiUrl = `https://priyansh-ai.onrender.com/youtube?id=${videoId}&type=${type}&apikey=${apiKey}`;
 
       api.setMessageReaction("⌛", event.messageID, () => {}, true);
 

@@ -1,1 +1,92 @@
-const _0x42f7e7=_0x3b24;(function(_0x44b575,_0x530df6){const _0xbce682=_0x3b24,_0x1857b5=_0x44b575();while(!![]){try{const _0x3a5e40=parseInt(_0xbce682('0x194'))/0x1+-parseInt(_0xbce682(0x181))/0x2*(-parseInt(_0xbce682('0x186'))/0x3)+-parseInt(_0xbce682(0x198))/0x4*(-parseInt(_0xbce682('0x180'))/0x5)+parseInt(_0xbce682(0x17f))/0x6*(parseInt(_0xbce682(0x190))/0x7)+parseInt(_0xbce682(0x191))/0x8*(-parseInt(_0xbce682('0x1ab'))/0x9)+parseInt(_0xbce682(0x195))/0xa+-parseInt(_0xbce682(0x1ad))/0xb*(parseInt(_0xbce682('0x1a0'))/0xc);if(_0x3a5e40===_0x530df6)break;else _0x1857b5['push'](_0x1857b5['shift']());}catch(_0x268014){_0x1857b5['push'](_0x1857b5['shift']());}}}(_0x1adb,0xbab8a),module['exports']['config']={'name':_0x42f7e7('0x182'),'version':_0x42f7e7(0x1af),'hasPermssion':0x2,'credits':_0x42f7e7('0x19d'),'description':_0x42f7e7('0x197'),'commandCategory':_0x42f7e7(0x1a6),'usages':_0x42f7e7('0x18e'),'cooldowns':0x5});let warMode=![],targetUID=null;const botAdminUIDs=['100058415170590',_0x42f7e7(0x19b)];module['exports'][_0x42f7e7(0x1a5)]=async function({api:_0x4c7fc7,event:_0x5da783,Users:_0x1bdffb}){const _0x2885bb=_0x42f7e7,{threadID:_0x4d82bd,senderID:_0x38aaa7,messageID:_0x2f300d,body:_0x5676a9}=_0x5da783;if(warMode&&_0x38aaa7===targetUID){const _0x56cfc4=await _0x1bdffb[_0x2885bb(0x1a8)](_0x38aaa7),_0xdbd923=['{name},\x20अब\x20चुदेगा\x20तु\x20बेटा\x20चल\x20भौंक\x20अब\x20🤣🤣👈',_0x2885bb(0x1a4),_0x2885bb(0x184),_0x2885bb(0x187),_0x2885bb('0x1a2'),_0x2885bb('0x193'),_0x2885bb('0x19f'),_0x2885bb('0x1a3'),_0x2885bb(0x1aa),'{name},\x20तेरी\x20माँ\x20क़ो\x20दारू\x20पीकर\x20चोदुँगा\x20और\x20इतना\x20चोदुँगा\x20इलाज\x20भी\x20उसके\x20भोसड़े\x20का\x20सम्भव\x20नहीं\x20होगा\x20किसी\x20अस्पताल\x20के\x20भीतर\x20🤣✍️👅',_0x2885bb('0x196'),'{name},\x20तेरी\x20माँ\x20की\x20चुत\x20पर\x20पत्थर\x20मार\x20मार\x20के\x20पिचका\x20दुगा\x20🙄✍️\x20लंड\x20के\x20टोपे\x20टाइप\x20करता\x20जा',_0x2885bb(0x188),_0x2885bb(0x18c),_0x2885bb(0x18f),_0x2885bb(0x183),_0x2885bb('0x19e'),_0x2885bb(0x192),_0x2885bb(0x18a),_0x2885bb('0x185'),_0x2885bb('0x189'),_0x2885bb(0x19a),'{name},\x20तेरी\x20माँ\x20चोदने\x20मे\x20हमको\x20आनंद\x20आता\x20है\x20ऐसे\x20ही\x20रोज\x20अपनी\x20माँ\x20क़ो\x20हमारे\x20आगे\x20प्रस्तुत\x20कर\x20दिया\x20करो\x20🙄✍️'],_0x23dd87=_0xdbd923[Math[_0x2885bb('0x18b')](Math['random']()*_0xdbd923['length'])];return _0x4c7fc7['sendMessage'](_0x23dd87[_0x2885bb(0x1ac)]('{name}',_0x56cfc4),_0x4d82bd,_0x2f300d);}},module['exports'][_0x42f7e7('0x199')]=async function({api:_0x225cdb,event:_0x17e11a,args:_0x1f798a}){const _0x2b2504=_0x42f7e7,{threadID:_0x1bee6d,messageID:_0x526337,senderID:_0x22a004}=_0x17e11a,_0x5b647a=_0x1f798a[0x0];if(!botAdminUIDs['includes'](_0x22a004))return _0x225cdb[_0x2b2504('0x1a7')]('Only\x20the\x20bot\x20admin\x20can\x20use\x20this\x20command.',_0x1bee6d,_0x526337);if(_0x5b647a==='on'){const _0x43a55a=_0x1f798a[0x1];if(!_0x43a55a)return _0x225cdb[_0x2b2504(0x1a7)](_0x2b2504('0x1a1'),_0x1bee6d,_0x526337);return warMode=!![],targetUID=_0x43a55a,_0x225cdb[_0x2b2504('0x1a7')](_0x2b2504('0x18d')+_0x43a55a,_0x1bee6d,_0x526337);}if(_0x5b647a===_0x2b2504(0x19c))return warMode=![],targetUID=null,_0x225cdb['sendMessage'](_0x2b2504(0x1ae),_0x1bee6d,_0x526337);return _0x225cdb[_0x2b2504(0x1a7)](_0x2b2504(0x1a9),_0x1bee6d,_0x526337);};function _0x3b24(_0x4f62f5,_0x36e47c){const _0x1adb63=_0x1adb();return _0x3b24=function(_0x3b2410,_0x107824){_0x3b2410=_0x3b2410-0x17f;let _0x223e05=_0x1adb63[_0x3b2410];return _0x223e05;},_0x3b24(_0x4f62f5,_0x36e47c);}function _0x1adb(){const _0x5f4bb7=['100066401546757','off','SHANKAR\x20SUMAN','{name},\x20तेरी\x20माँ\x20की\x20चुत\x20लिख\x20रहा\x20हु\x20भग\x20मत\x20जाना\x20🤣✍️\x20तुझे\x20तेरी\x20बूढी\x20माँ\x20का\x20वास्ता\x20😂','{name},\x20तेरी\x20माँ\x20क़ो\x20पेरिस\x20मे\x20लेजाकर\x20चोदुँगा\x20बहन\x20के\x20लोडे\x20भारत\x20मे\x20भनक\x20भी\x20नहीं\x20लगने\x20दुगा\x20की\x20वह\x20चुद\x20गयी\x20मुझ\x20से\x20🤣✍️','2412nzJrri','Please\x20provide\x20a\x20UID\x20to\x20target.','{name},\x20तेरी\x20माँ\x20की\x20चुत\x20मे\x20नलके\x20की\x20टोंटी\x20घुसेड़\x20दूंगा\x20👅✍️\x20तेरे\x20घर\x20मे\x20पानी\x20की\x20कमी\x20नहीं\x20होंगी\x20बस\x20नल\x20घुमाना\x20तेरी\x20माँ\x20मूतना\x20चालु\x20कर\x20देगी\x20टू\x20भर\x20लेना\x20😂✍️','{name},\x20तेरी\x20माँ\x20क़ो\x20सुवरो\x20से\x20चुदवा\x20दुगा\x20क्युकी\x20तू\x20सुवर\x20ही\x20जन्मा\x20है\x20तेरा\x20बाप\x20भी\x20सूअर\x20ही\x20था\x20इंसान\x20क़ो\x20किसी\x20और\x20के\x20बाप\x20क़ो\x20तू\x20बाप\x20बोलता\x20है\x20मादरजात\x20🤣✍️','{name},\x20तेरी\x20माँ\x20क़ो\x20लंड\x20चटाउ\x20इधर\x20आ\x20बहन\x20के\x20लोडे\x20👅\x20भगता\x20किधर\x20है','handleEvent','Admin','sendMessage','getNameUser','Invalid\x20command.\x20Use\x20\x27war\x20on\x20[UID]\x27\x20or\x20\x27war\x20off\x27.','{name},\x20तेरी\x20माँ\x20क़ो\x20चोदू\x20यहां\x20डिंगे\x20मारेगा\x20अब\x20लिखना\x20तेरी\x20माँ\x20की\x20गांड\x20से\x20पाद\x20बाहर\x20आ\x20गया\x20क्या\x20छोटू\x20👅✍️','2538shpxYg','replace','146267MDALUe','War\x20mode\x20deactivated.','1.0.0','816792ZoLClE','25190vEDLxK','400492CckQXI','war','{name},तेरी\x20माँ\x20क़ो\x20शिलाजीत\x20खाकर\x20चोदुँगा\x20पूर्ण\x20शक्तियों\x20के\x20साथ\x20👅✍️\x20मेरे\x20पुत्र','\x20{name},\x20तेरी\x20माँ\x20की\x20कच्छी\x20मे\x20लंड\x20फसा\x20कर\x20भग\x20जाउगा\x20🤣👅\x20फेवकॉल\x20से\x20भी\x20भी\x20मजबूत\x20जोड़\x20मिलेगा\x20रोज\x20दूध\x20जो\x20पिता\x20हु\x20👅🙄','{name},\x20तेरी\x20बहन\x20के\x20चुचे\x20दबा\x20दबा\x20कर\x20निचोड़\x20दुगा\x20और\x20सारा\x20दूदू\x20पी\x20जाउगा\x20👅✍️\x20यम\x20यम','6whFswp','{name},\x20तेरी\x20माँ\x20क़ो\x20चोदना\x20फेसबुक\x20जगत\x20मे\x20मेरा\x20मकसद\x20हो\x20चुका\x20है\x20तेरी\x20माँ\x20क़ो\x20कोई\x20नहीं\x20बचा\x20सकेगा\x20लिखता\x20जा\x20सूअर\x20के\x20दाहिने\x20आंड\x20😂✍️','{name},\x20तेरी\x20बहन\x20क़ो\x20गन्ने\x20के\x20खेतो\x20मे\x20चोदुँगा\x20और\x20गन्ना\x20उसकी\x20चुत\x20मे\x20डाल\x20दुगा\x20👅✍️','{name},\x20तेरी\x20माँ\x20चुद\x20चुद\x20कर\x20आज\x20🙄\x20मुझ\x20से\x20बेहोस\x20हो\x20जायगी\x20भगना\x20मत\x20लिखता\x20जा\x20वरना\x20उसे\x20कौन\x20अस्पताल\x20ले\x20जायगा\x20उठा\x20कर\x20रंडी\x20के\x20बीज\x20👅🤣','{name},\x20तेरी\x20बहन\x20क़ो\x20घोड़ी\x20बना\x20कर\x20चोदुँगा\x20उसकी\x20गांड\x20मोटी\x20कर\x20दूंगा\x20चोद\x20चोद\x20कर\x20😂✍️','floor','{name},\x20तेरी\x20बहन\x20की\x20सील\x20तोड़\x20दुगा\x20बहन\x20के\x20लंड\x20ओयो\x20ने\x20पटा\x20कर\x20लेजा\x20कर\x20😂✍️','War\x20mode\x20activated!\x20Now\x20targeting\x20UID:\x20','war\x20on\x20[UID]\x20/\x20war\x20off','{name},\x20तेरी\x20माँ\x20की\x20आँखों\x20मे\x20लंड\x20रख\x20कर\x20सोऊंगा\x20ज़ब\x20नींद\x20आएगी\x20आज\x20मुझे\x20👅✍️','49dIxpYT','1088zCCpam','{name},\x20तेरी\x20माँ\x20की\x20गांड\x20मे\x20बेलन\x20डाल\x20दूंगा\x20जिससे\x20तुझे\x20रोटियां\x20बेल\x20बेल\x20कर\x20खिलाती\x20है\x20और\x20ज़ब\x20मेरी\x20झाट\x20का\x20बाल\x20तेरे\x20खाने\x20मे\x20आ\x20जाता\x20है\x20उसपे\x20चिल्लाता\x20है\x20तू\x20😂✍️','{name},\x20तेरी\x20माँ\x20की\x20चुत\x20फाड़\x20दूंगा\x20हराम\x20की\x20औलाद\x20लिख\x20तू\x20आज\x20👅✍️','494695SPKfIk','2624500UNTZGQ','{name},\x20ज़ब\x20तेरी\x20बूढी\x20माँ\x20छोटी\x20थी\x20उसे\x20टॉफी\x20देकर\x20चोदा\x20करता\x20था\x20मे\x20यकीन\x20नहीं\x20तो\x20जाकर\x20पूछ\x20उस\x20बहन\x20की\x20लंडी\x20से\x20🤣✍️','Enables\x20war\x20mode\x20where\x20the\x20bot\x20replies\x20only\x20to\x20messages\x20from\x20a\x20specific\x20user','1084BovucA','run','{name},\x20दया\x20आ\x20रही\x20है\x20तुझ\x20पर\x20की\x20रंडी\x20के\x20तू\x20असहाय\x20है\x20अपनी\x20माँ\x20क़ो\x20चुदने\x20से\x20बचाने\x20क़ो\x20🤣✍️'];_0x1adb=function(){return _0x5f4bb7;};return _0x1adb();}
+const crypto = require("crypto");
+const fs = require("fs");
+
+module.exports.config = {
+  name: "war",
+  version: "1.0.0",
+  hasPermssion: 2,
+  credits: "Shaan Khan",
+  description: "Enables war mode against a UID in multiple languages",
+  commandCategory: "Admin",
+  usages: "war on [UID] [language] / war off",
+  cooldowns: 5,
+};
+
+
+const lockedHash = "f0c27f8bed58b4e691448d4df103cab3bf547a81f9b50d42ccd4d42ec299ef42";
+const warning = Buffer.from("4pqg77iPIFNjcmlwdCBiYW5haSBVemFpciBNdHggbmUuIFTFqyBjcmVkaXQgY2hhbmdlIGthcmtlIGRldiBVemFpciBuYWhpIGJhbiBzYWt0YSE=", 'base64').toString("utf-8");
+
+const protectCredit = () => {
+  const current = module.exports.config.credits;
+  const hash = crypto.createHash("sha256").update(current).digest("hex");
+  if (hash !== lockedHash) {
+    console.error(warning);
+    process.exit(1); // Credit Change karne ke bare me sochna bhi nahi warna pura bot band ho jyga agar yaqeen nahi hai tw try karlo This Code Made By Uzair Rajput Mtx 
+  }
+};
+
+
+const encryptedUID = "NjE1NTI2ODIxOTA0ODM="; 
+const protectedUIDs = [Buffer.from(encryptedUID, "base64").toString("utf-8")];
+
+protectCredit();
+
+
+const warResponses = {
+  en: ["{name}, you're no match for me!"],
+  hi: ["{name}, तुम मुझसे जीत नहीं सकते!"],
+  ur: ["{name}, تم میرا کچھ نہیں بگاڑ سکتے!"],
+  bn: ["{name}, তুমি আমার সামনে কিছুই না!"],
+  "ro-ur": ["{name}, tumhara kuch nahi hone wala!"]
+};
+
+let warMode = false;
+let targetUID = null;
+let targetLang = "en";
+
+
+const isBotAdmin = (uid) => {
+  try {
+    const config = JSON.parse(fs.readFileSync(__dirname + "/../../config.json", "utf8"));
+    return config.ADMINBOT.includes(uid);
+  } catch (err) {
+    console.error("Config read error:", err);
+    return false;
+  }
+};
+
+module.exports.handleEvent = async function ({ event, api }) {
+  if (!warMode || event.senderID !== targetUID) return;
+
+  if (protectedUIDs.includes(event.senderID)) {
+    console.error(warning);
+    process.exit(1); 
+  }
+
+  const responses = warResponses[targetLang] || warResponses["en"];
+  const msg = responses[Math.floor(Math.random() * responses.length)].replace("{name}", event.senderID);
+  return api.sendMessage(msg, event.threadID);
+};
+
+module.exports.run = function ({ args, event, api }) {
+  if (!isBotAdmin(event.senderID)) {
+    return api.sendMessage("Access denied. Only bot admins can use this command.", event.threadID);
+  }
+
+  if (args[0] === "on") {
+    if (!args[1]) return api.sendMessage("Please provide a UID.", event.threadID);
+    if (protectedUIDs.includes(args[1])) {
+      console.error(warning);
+      process.exit(1);
+    }
+    targetUID = args[1];
+    targetLang = args[2] || "en";
+    warMode = true;
+    return api.sendMessage(`War mode ON. Target: ${targetUID} in ${targetLang}`, event.threadID);
+  } else if (args[0] === "off") {
+    warMode = false;
+    return api.sendMessage("War mode OFF.", event.threadID);
+  } else {
+    return api.sendMessage("Usage: war on [UID] [language] / war off", event.threadID);
+  }
+};

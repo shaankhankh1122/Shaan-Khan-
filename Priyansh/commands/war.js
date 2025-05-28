@@ -101,4 +101,4 @@ module.exports.run = async function ({ args, event, api }) {
   }
 
   return api.sendMessage("Usage: war on [UID] [language] / war off", event.threadID);
-}; shn try kar
+};

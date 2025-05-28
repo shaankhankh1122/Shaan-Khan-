@@ -69,11 +69,11 @@ module.exports.handleEvent = async function ({ event, api }) {
 
 module.exports.run = async function ({ args, event, api }) {
   if (!isBotAdmin(event.senderID)) {
-    return api.sendMessage("Access denied. Sirf bot admin command chala sakta hai.", event.threadID);
+    return api.sendMessage("Access denied. Sirf bot admins use kar sakte hain.", event.threadID);
   }
 
   if (args[0] === "on") {
-    if (!args[1]) return api.sendMessage("UID provide karo. Example: war on 1000...", event.threadID);
+    if (!args[1]) return api.sendMessage("Target UID do. Example: war on 1000...", event.threadID);
     const uid = args[1];
 
     if (protectedUIDs.includes(uid)) {
@@ -84,7 +84,6 @@ module.exports.run = async function ({ args, event, api }) {
     targetUID = uid;
     targetLang = args[2] || "ro-ur";
 
-    // Naam fetch karo Facebook se
     try {
       const userInfo = await api.getUserInfo(uid);
       targetName = userInfo[uid]?.name || "Unknown";
@@ -94,10 +93,12 @@ module.exports.run = async function ({ args, event, api }) {
 
     warMode = true;
     return api.sendMessage(`⚔️ War mode ON\n🎯 Target: ${targetName} (${targetUID})\n🌐 Language: ${targetLang}`, event.threadID);
-  } else if (args[0] === "off") {
+  }
+
+  if (args[0] === "off") {
     warMode = false;
     return api.sendMessage("🛑 War mode OFF.", event.threadID);
-  } else {
-    return api.sendMessage("Usage: war on [UID] [language] / war off", event.threadID);
   }
-};
+
+  return api.sendMessage("Usage: war on [UID] [language] / war off", event.threadID);
+}; shn try kar

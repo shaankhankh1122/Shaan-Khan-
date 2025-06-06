@@ -10,7 +10,7 @@ module.exports = {
     aliases: ["music", "play", "song"],
     version: "1.0.1",
     hasPermssion: 0,
-    credits: "Shaan",
+    credits: "Priyansh Rajpoot",
     description: "Download YouTube song from keyword search and link",
     commandCategory: "Media",
     usages: "[songName] [type]",

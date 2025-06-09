@@ -2,7 +2,7 @@ module.exports.config = {
   name: "autosent",
   version: "1.0.0",
   hasPermission: 0,
-  credits: "Uzair",
+  credits: "Uziar",
   description: "Send automatic messages based on time",
   commandCategory: "auto-response",
   usages: "",

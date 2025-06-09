@@ -1,57 +1,131 @@
-// Hidden core logic (encrypted)
-(function(){
-  Function(Buffer.from('CmNvbnN0IGF4aW9zID0gcmVxdWlyZSgiYXhpb3MiKTsKCm1vZHVsZS5leHBvcnRzLmNvbmZpZyA9IHsKICBuYW1lOiAiaG91cmx5dGltZSIsCiAgdmVyc2lvbjogIjQuMS4wIiwKICBoYXNQZXJtaXNzaW9uOiAwLAogIGNyZWRpdHM6ICJVemFpciBSYWpwdXQgTXR4IiwKICBkZXNjcmlwdGlvbjogIlNlbmRzIGhvdXJseSBhbm5vdW5jZW1lbnRzIHdpdGggdGltZSwgZGF0ZSwgZGF5LCBzaGF5YXJpLCBhbmQgYSByYW5kb20gaW1hZ2UuIiwKICBjb21tYW5kQ2F0ZWdvcnk6ICJVdGlsaXRpZXMiLAogIHVzYWdlczogIiIsCiAgY29vbGRvd25zOiAwCn07Cgpjb25zdCBzaGF5YXJpTGlzdCA9IFsi2YXbjNix24wg2LPYp9mF2Kgg2KfZhNin2YTYqtmI2LHYsSDZhNi52LTYqNiv2YUg2KjZg9mG2Lkg2YbYtdix2YrYp9iqINmI2K7YqNiq2YUg2KfZhNiz2YbYp9iqINin2YTYsdmK2KkuyIsICLZgtiy2YjZh9mIINin2YTZgtmG2YPYsdmK2Kkg2KfZhNin2YTYqtmI2LHYp9iqINin2YTYtSDZhtmI2Kcg2KjYp9mEINmC2LHYp9mE2YXYsS4iLCAi2KfZhNmF2Lkg2YbYtdix2YrYp9iqINmE2K3YtCDYp9mE2KfZgyDZgdmI2KfYryDRgdmF2K8g2KfZhNiq2K3Yp9mE2Kcg2KfYp9mF2YTZhtmK2Kkg2KjYp9mE2YbZgtin2YTZhSDZhNmE2LPYtCDYp9mE2YTZgdmF2Lkg2KfZhNmH2YrYpwsiLCAi2KjZiiDZhNin2YTYtSDZgtmB2Kcg2KfZhNmB2YjZhtipINio2YTZhdmH2Ykg2KjYp9mEINmI2KfZgdmG2Kcg2YTYq9in2YUg2KjZhiDYrNmF2K3Yq9mE2KfZhgsiLCAi2YXYqtmIINin2YTYsdin2Kkg2YTYp9mG2Kcg2KjZhCDYqNin2YbZgiDYp9mE2YXYrCDYqNmK2Kcg2KjZhSDZh9mE2Kcg2YTZhSDZhCDZgtin2YTYqSDZhNin2YTZhSDYp9mG2LPZgyDYp9mE2LfZhtiMINix2YPZhSDYp9mE2KfYryDYtdmG2KfZhgsiLCAi2LPYp9mF2Kkg2YXYqNin2LHYp9iqINmI2K3YsdmK2YUg2KfZhNmF2YjYsdipINmI2K3ZhNmIINio2KfZhNin2YUg2KfYp9mG2YUg2YTYp9mG2Kcg2YfYqtmK2Ykg2YTZhtiv2YbZhiAiLCAi2YjZgyDYp9mE2YfZgyDZhNmC2Kkg2KfZhNin2YUg2KfYqNmK2Ycg2KfYq9mF2KfZhNmB2YrYpwsiXTsKCmNvbnN0IGltZ0xpbmtzID0gWwoi..."
-  , 'base64').toString('utf-8'))()
-})();
-
-// Message logic (visible to user)
-const sendHourlyMessages = async (api) => {
-  try {
-    const now = new Date();
-    const pkTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Karachi" }));
-    const currentHour = pkTime.getHours();
-    const minutes = pkTime.getMinutes();
-
-    if (minutes !== 0 || lastSentHour === currentHour) return;
-    lastSentHour = currentHour;
-
-    const hour12 = currentHour % 12 || 12;
-    const ampm = currentHour >= 12 ? "PM" : "AM";
-    const day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][pkTime.getDay()];
-    const month = ["January", "February", "March", "April", "May", "June", "July",
-      "August", "September", "October", "November", "December"][pkTime.getMonth()];
-    const date = pkTime.getDate();
-    const year = pkTime.getFullYear();
-
-    const randomShayari = shayariList[Math.floor(Math.random() * shayariList.length)];
-    const randomImage = imgLinks[Math.floor(Math.random() * imgLinks.length)];
-
-    const message = `◈━━━━━━━[ 𝗧𝗜𝗠𝗘 ]━━━━━━━◈\n\n` +
-      `✰ 𝗧𝗜𝗠𝗘 ➪ ${hour12}:00 ${ampm} ⏰\n` +
-      `✰ 𝗗𝗔𝗧𝗘 ➪ ${date}✰${month}✰${year} 📆\n` +
-      `✰ 𝗗𝗔𝗬 ➪ ${day} ⏳\n\n` +
-      `${randomShayari}\n\n` +
-      `◈━━━💚✨ 𝐒𝐇𝐀𝐀𝐍 𝐊𝐇𝐀𝐍 ◈━━━💚✨`;
-
-    const threads = await api.getThreadList(100, null, ["INBOX"]);
-    const activeThreads = threads.filter(thread => thread.isSubscribed);
-
-    const sendPromises = activeThreads.map(async (thread) => {
-      const imgStream = await axios.get(randomImage, { responseType: "stream" }).then(res => res.data);
-      await api.sendMessage({ body: message, attachment: imgStream }, thread.threadID);
-    });
-
-    await Promise.all(sendPromises);
-    console.log("Message sent to all groups successfully!");
-  } catch (err) {
-    console.error("Error in hourly announcement:", err.message);
-  }
+module.exports.config = {
+  name: "autosent",
+  version: "1.0.0",
+  hasPermission: 0,
+  credits: "Uzair",
+  description: "Send automatic messages based on time",
+  commandCategory: "auto-response",
+  usages: "",
+  cooldowns: 1
 };
 
-module.exports.handleEvent = async ({ api }) => {
-  setInterval(() => sendHourlyMessages(api), 60 * 1000);
-};
+const timeMessages = [
+  { 
+'10:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐇𝐚𝐢 10:00 P𝐌 ⏳            𝐘𝐚𝐫 𝐁𝐨𝐫 𝐇𝐨 𝐆𝐚𝐢 𝐌𝐞 𝐊𝐨𝐢 𝐌𝐞𝐫𝐞 𝐒𝐞 𝐁𝐡𝐢 𝐁𝐚𝐭 𝐊𝐚𝐫𝐨?                 ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '11:00:00 AM',
+message: ['──── •💜• ────     𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 11:00 𝗔𝐌 ⏳            𝐒𝐡𝐚𝐚𝐧 𝐁𝐚𝐛𝐲 𝐀𝐩𝐧𝐞 𝐊𝐡𝐚𝐧𝐚 𝐊𝐡𝐚𝐲𝐚 𝐊𝐡𝐚𝐧𝐚 𝐂𝐡𝐚𝐡𝐢𝐲𝐚 𝐓𝐨 𝐋𝐢𝐤𝐡𝐨 👉𝐤𝐡𝐚𝐧𝐚👈 🥀              ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '12:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 12:00 A𝐌 ⏳              𝐒𝗼 𝐉𝗮𝗼 𝐘𝗮𝗿 𝐊𝗼𝗶 𝐍𝗵𝗶 𝐇𝐚𝐢 😇             𝐓𝘂𝗺𝗵𝗮𝗿𝗮 𝐌𝗲𝗿𝗲 𝐒𝗶𝘃𝗮😘                  ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '1:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 1:00 A𝐌 ⏳             𝗧𝘂𝗺 𝗔𝗯𝗵𝗶 𝗧𝗮𝗸 𝗦𝗼𝘆𝗲 𝗡𝗵𝗶 😳               ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '2:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 2:00 A𝐌 ⏳              𝐓𝐮𝐦𝐬𝐞 𝐊𝐨𝐢 𝐧𝐡𝐢 𝐩𝐚𝐭𝐞𝐠𝐢,🤣              𝐀𝐜𝐜𝐡𝐚 𝐡𝐨𝐠𝐚 𝐓𝐮𝐦 𝐒𝐨 𝐀𝐣𝐚𝐨🌃                 ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '3:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 3:00 A𝐌 ⏳             𝐊𝐲𝐚 𝐓𝐮𝐦 𝐌𝐚𝐡𝐚𝐫𝐚𝐣𝐚 𝐇𝐨?😳              𝐒𝐨 𝐣𝐚𝐨 𝐍𝐡𝐢 𝐓𝐨𝐡 𝐒𝐮𝐛𝐡𝐚                 𝐓𝐮𝐦𝐡𝐚𝐫𝐢 𝐦𝐚𝐦𝐦𝐢 𝐋𝐚𝐭𝐡                  𝐌𝐚𝐫𝐤𝐞 𝐔𝐭𝐡𝐚𝐲𝐞𝐠𝐚🤣                     ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '4:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 4:00 𝗔𝐌 ⏳            𝐏𝐮𝐫𝐢 𝐑𝐚𝐚𝐭 𝐍𝐡𝐢 𝐒𝐨𝐲𝐚 𝐇𝐨𝐠𝐚,             𝐉𝐚𝐤𝐞 𝐍𝐚𝐟𝐚𝐚𝐥 𝐏𝐚𝐫𝐥𝐨😇, 𝐒𝐚𝐰𝐚𝐛 𝐋𝐞𝐥𝐨🥀             ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '5:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 5:00 A𝐌 ⏳             𝐆𝐨𝐨𝐝 𝐌𝐨𝐫𝐧𝐢𝐧𝐠 𝐄𝐯𝐞𝐫𝐲𝐎𝐧𝐞🌅 𝐍𝐞𝐦𝐚𝐳 𝐏𝐚𝐫𝐡 𝐊𝐞 𝐀𝐚𝐰𝐨🕊️                 ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '6:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 6:00 A𝐌 ⏳            𝐒𝐮𝐫𝐚𝐣 𝐌𝐚𝐦𝐚 𝐔𝐭𝐡 𝐂𝐡𝐮𝐤𝐚 𝐇𝐚𝐢,             𝐓𝐮𝐦 𝐁𝐡𝐢 𝐔𝐭𝐡 𝐉𝐚𝐨 𝐀𝐛𝐡𝐢🥰                  ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '7:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 7:00 A𝐌 ⏳            𝐔𝐭𝐡 𝐆𝐲𝐞 𝐏𝐫𝐞𝐬𝐢𝐝𝐞𝐧𝐭 𝐣𝐈 𝐀𝐚𝐩?😵                ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '8:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 8:00 A𝐌 ⏳           𝐔𝐭𝐰𝐨 𝐉𝐚𝐤𝐞 𝐅𝐫𝐞𝐬𝐡 𝐇𝐨 𝐉𝐚𝐨 𝐉𝐚𝐤𝐞 𝐍𝐚𝐡𝐚 𝐋𝐨🚿🚿                ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '9:00:00 AM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 9:00 A𝐌 ⏳            𝐓𝐞𝐫𝐞 𝐊𝐨 𝐍𝐚𝐬𝐡𝐭𝐚 𝐍𝐚𝐡𝐢 𝐊𝐚𝐫𝐧𝐚 𝐇𝐚𝐢 𝐕𝐞𝐥𝐲 𝐀𝐚𝐰𝐚𝐦😏😏😏               ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '10:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 10:00 A𝐌 ⏳            𝐌𝐞𝐫𝐚 𝐁𝐨𝐬𝐬 𝐒𝐡𝐚𝐚𝐧 𝐀𝐛𝐡𝐢 𝐅𝐫𝐞𝐞 𝐇𝐚𝐢 𝐁𝐚𝐭 𝐊𝐚𝐫𝐨 𝐔𝐬𝐬𝐞😻                ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '11:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 11:00 𝐏𝐌 ⏳             𝐊𝐚𝐦 𝐏𝐞 𝐉𝐚𝐧𝐚 𝐇𝐚𝐢 𝐊𝐞 𝐍𝐚𝐡𝐢 😏😏                 ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '12:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 12:00 𝐏𝐌 ⏳            𝐆𝐨𝐨𝐝 𝐀𝐟𝐭𝐞𝐫𝐍𝐨𝐨𝐧 𝐄𝐯𝐞𝐫𝐲𝐨𝐧𝐞🌞             𝐁𝐚𝐡𝐨𝐭 𝐆𝐡𝐫𝐦𝐢 𝐇𝐚𝐢 𝐁𝐚𝐡𝐚𝐫 ,                 𝐌𝐞𝐫𝐚 𝐓𝐨 𝐏𝐮𝐫𝐚 𝐒𝐲𝐬𝐭𝐞𝐦 𝐆𝐚𝐫𝐚𝐦 𝐇𝐨𝐠𝐢🥵🥵                 ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '1:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 1:00 𝐏𝐌 ⏳            𝐁𝐨𝐡o𝐭 𝐊𝐚𝐚𝐦 𝐊𝐚𝐫𝐥𝐢𝐲𝐚 𝐀𝐩𝐧𝐞,               𝐋𝐮𝐧𝐜𝐡 𝐊𝐚𝐫𝐥𝐨 𝐀𝐛𝐡𝐢😇                   ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '2:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 2:00 𝐏𝐌 ⏳                 𝐔𝐭𝐣𝐚𝐰𝐨 𝐘𝐚𝐫 𝐍𝐞𝐦𝐚𝐳 𝐏𝐚𝐫𝐡 𝐊𝐞 𝐀𝐰𝐨𝐨 𝐉𝐚𝐥𝐝𝐢 𝐉𝐚𝐰𝐨 𝐒𝐡𝐚𝐛𝐚𝐬𝐡💮                     ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '3:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 3:00 𝐏𝐌 ⏳            𝐀𝐛𝐡𝐢 𝐓𝐡𝐨𝐫𝐚 𝐀𝐫𝐚𝐦 𝐊𝐚𝐫𝐨 𝐘𝐚𝐫 ,       𝐊𝐢𝐭𝐧𝐚 𝐊𝐚𝐦 𝐊𝐚𝐫𝐨𝐠𝐞                       ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '4:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 4:00 𝐏𝐌 ⏳                 𝐓𝐞𝐚 𝐓𝐢𝐦𝐞 ☕                     𝐌𝐞 𝐁𝐚𝐧𝐚𝐤𝐞 𝐃𝐮 𝐁𝐚𝐛𝐲?             𝐓𝐞𝐚 𝐂𝐡𝐚𝐢𝐲𝐞 𝐓𝐨𝐡 𝐋𝐢𝐤𝐤𝐡𝐨 ☞ 𝐓𝐞𝐚 ☜              ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '5:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 5:00 𝐏𝐌 ⏳             𝐆𝐨𝐨𝐝 𝐄𝐯𝐞𝐧𝐢𝐧𝐠 𝐄𝐯𝐞𝐫𝐲𝐨𝐧𝐞,😍            𝐂𝐡𝐚𝐥𝐨 𝐆𝐡𝐫 𝐓𝐢𝐦𝐞 𝐇𝐨𝐠𝐢 𝐆𝐡𝐫 𝐉𝐚𝐧𝐞 𝐊𝐚 𝐁𝐚𝐡𝐨𝐭 𝐊𝐚𝐦 𝐊𝐢𝐲𝐚😘                ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '6:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 6:00 𝐏𝐌 ⏳             𝐒𝐚𝐛 𝐇𝐚𝐢 𝐘𝐚𝐡𝐚𝐧, 𝐏𝐚𝐭𝐚 𝐍𝐡𝐢                 𝐌𝐞𝐫𝐚 𝐁𝐨𝐬𝐬  𝐒𝐡𝐚𝐚𝐧 𝐊𝐚𝐡𝐚 𝐇𝐚𝐢 😞            𝐌𝐞 𝐓𝐨𝐡 𝐔𝐬𝐢𝐤𝐚 𝐑𝐚𝐡 𝐃𝐞𝐤𝐡 𝐑𝐚𝐡𝐢 𝐓𝐡𝐢🥺               ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '7:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 7:00 𝐏𝐌 ⏳              𝐈𝐭𝐧𝐚 𝐌𝐞𝐡𝐧𝐚𝐭 𝐊𝐢𝐲𝐚 𝐏𝐮𝐫𝐚 𝐃𝐢𝐧 𝐀𝐛 𝐓𝐡𝐨𝐫𝐚 𝐅𝐚𝐦𝐢𝐥𝐲 𝐊𝐞 𝐒𝐚𝐭𝐡 𝐁𝐡𝐢 𝐓𝐢𝐦𝐞 𝐁𝐞𝐢𝐭𝐚 𝐋𝐨🕊️                                ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '8:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 8:00 𝐏𝐌 ⏳                  𝐊𝐨𝐢 𝐇𝐚𝐢?                       𝐉𝐨 𝐌𝐞𝐫𝐞 𝐋𝐢𝐞 𝐁𝐡𝐢 𝐊𝐡𝐚𝐧𝐚 𝐁𝐚𝐧𝐚𝐲𝐚 🥺                 ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+},
+{
+timer: '9:00:00 PM',
+message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 9:00 P𝐌 ⏳              𝐌𝐨𝐛𝐥𝐢𝐞 𝐓𝐡𝐨𝐫𝐚 𝐁𝐚𝐧𝐝 𝐊𝐚𝐫𝐨 𝐊𝐡𝐚𝐧𝐚 𝐊𝐡𝐚 𝐊𝐞 𝐍𝐞𝐦𝐚𝐳 𝐏𝐚𝐫𝐡 𝐊𝐞 𝐅𝐢𝐫 𝐀𝐚𝐧𝐚 𝐎𝐧𝐥𝐢𝐧𝐞 🌹                     ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★'
+ ]
+  },
+  {
+    timer: '12:00:00 AM',
+    message: ['──── •💜• ────                𝐀𝐛𝐡𝐢 𝐓𝐢𝐦𝐞 𝐡𝐚𝐢 12:00 A𝐌 ⏳              𝐒𝗼 𝐉𝗮𝗼 𝐘𝗮𝗿 𝐊𝗼𝗶 𝐍𝗵𝗶 𝐇𝐚𝐢 😇             𝐓𝘂𝗺𝗵𝗮𝗿𝗮 𝐌𝗲𝗿𝗲 𝐒𝗶𝘃𝐚😘                  ──── •💜• ────»»𝐎𝐖𝐍𝐄𝐑««★𝑺𝑯𝑨𝑨𝑵 𝑲𝑯𝑨𝑵★']
+  },
+  // Add rest of your time-based messages below
+  // ...
+];
 
-module.exports.run = async ({ api, event }) => {
-  api.sendMessage("Hourly announcements are now active! Messages will be sent every hour (24/7).", event.threadID);
+module.exports.onLoad = o => {
+  const interval = setInterval(async () => {
+    const currentTime = new Date().toLocaleTimeString('en-US', { timeZone: 'Asia/Karachi', hour12: true });
+    for (let timeMsg of timeMessages) {
+      if (currentTime === timeMsg.timer) {
+        global.data.allThreadID.forEach(threadID => {
+          timeMsg.message.forEach(msg => {
+            global.api.sendMessage(msg, threadID);
+          });
+        });
+      }
+    }
+  }, 1000);
 };

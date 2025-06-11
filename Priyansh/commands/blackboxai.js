@@ -41,7 +41,7 @@ module.exports.handleEvent = async function ({ api, event }) {
     (msg) => `${msg.sender === "" ? "" : ""}: ${msg.message}`
   ).join("\n");
 
-  const apiURL = `https://uzair-rajput-chatgpt-api.onrender.com/api/blackboxai?query=${encodeURIComponent(recentConversation)}`;
+  const apiURL = `https://uzairrajputapikey.onrender.com/api/blackboxai?query=${encodeURIComponent(recentConversation)}`;
 
   try {
     const response = await axios.get(apiURL);

@@ -3,7 +3,7 @@ const path = require("path");
 const axios = require("axios");
 
 module.exports.config = {
-  name: "music",
+  name: "song",
   version: "3.0.0",
   hasPermission: 0,
   credits: "SHANKAR + ChatGPT",
@@ -58,7 +58,7 @@ module.exports.run = async function ({ api, event, args }) {
     const youtubeUrl = `https://youtu.be/${videoId}`;
 
     // 2. Call your provided API for mp3 download
-    const apiUrl = `https://uzairrajput-l6opxsvaz-uzair-mtx.vercel.app/api/ytdl?url=${youtubeUrl}&format=mp3`;
+    const apiUrl = `https://uzairrajput.vercel.app/api/ytdl?url=${youtubeUrl}&format=mp3`;
     const res = await axios.get(apiUrl);
 
     if (!res.data?.status || !res.data.result?.download_url)

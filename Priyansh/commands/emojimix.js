@@ -6,7 +6,7 @@ module.exports.config = {
   name: "emojimix",
   version: "1.0",
   hasPermssion: 0,
-  credits: "Shaan",
+  credits: "Raj",
   description: "Mix 2 emojis together using Emoji Kitchen",
   commandCategory: "fun",
   usages: "[🙂🥵]",
@@ -26,8 +26,9 @@ module.exports.run = async function({ api, event, args }) {
       responseType: "stream"
     });
 
-    const filePath = path.join(__dirname, `cache/emojimix_${Date.now()}.gif`);
+    const filePath = path.join(__dirname, `cache/emojimix_${Date.now()}.png`);
     const writer = fs.createWriteStream(filePath);
+
     res.data.pipe(writer);
 
     writer.on("finish", () => {
@@ -38,10 +39,10 @@ module.exports.run = async function({ api, event, args }) {
     });
 
     writer.on("error", () => {
-      api.sendMessage("❌ Error saving file", event.threadID, event.messageID);
+      api.sendMessage("❌ Error writing file", event.threadID, event.messageID);
     });
   } catch (err) {
-    console.error(err);
+    console.log("❌ Error log:", err.message);
     api.sendMessage("❌ Failed to mix emojis.", event.threadID, event.messageID);
   }
 };

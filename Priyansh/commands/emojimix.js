@@ -5,18 +5,22 @@ const path = require("path");
 module.exports.config = {
   name: "emojimix",
   version: "1.0",
-  hasPermssion: 0,
+  hasPermission: 0,
   credits: "Raj",
   description: "Mix 2 emojis together using Emoji Kitchen",
   commandCategory: "fun",
-  usages: "[🙂🥵]",
+  usages: "emojimix 😗🙃",
   cooldowns: 3
 };
 
-module.exports.run = async function({ api, event, args }) {
-  const input = args.join("");
-  if (!input || input.length < 2)
-    return api.sendMessage("❌ Please send 2 emojis together (no space)", event.threadID, event.messageID);
+module.exports.run = async function({ api, event }) {
+  const { body, threadID, messageID } = event;
+
+  const input = body.slice(body.indexOf(" ") + 1).trim(); // Get emojis
+
+  if (!input || input.length < 2) {
+    return api.sendMessage("❌ Please type 2 emojis together.\nExample: emojimix 😗🙃", threadID, messageID);
+  }
 
   const emoji1 = input[0];
   const emoji2 = input[1];
@@ -26,23 +30,23 @@ module.exports.run = async function({ api, event, args }) {
       responseType: "stream"
     });
 
-    const filePath = path.join(__dirname, `cache/emojimix_${Date.now()}.png`);
+    const filePath = path.join(__dirname, "cache", `emojimix_${Date.now()}.png`);
     const writer = fs.createWriteStream(filePath);
-
     res.data.pipe(writer);
 
     writer.on("finish", () => {
       api.sendMessage({
         body: `✨ Mix of ${emoji1} + ${emoji2}`,
         attachment: fs.createReadStream(filePath)
-      }, event.threadID, () => fs.unlinkSync(filePath), event.messageID);
+      }, threadID, () => fs.unlinkSync(filePath), messageID);
     });
 
     writer.on("error", () => {
-      api.sendMessage("❌ Error writing file", event.threadID, event.messageID);
+      api.sendMessage("❌ Error writing image file", threadID, messageID);
     });
+
   } catch (err) {
-    console.log("❌ Error log:", err.message);
-    api.sendMessage("❌ Failed to mix emojis.", event.threadID, event.messageID);
+    console.error("❌ API Error:", err.message);
+    api.sendMessage("❌ Failed to fetch emoji mix. Try again later.", threadID, messageID);
   }
 };
